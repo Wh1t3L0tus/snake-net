@@ -13,10 +13,30 @@
     <Filter Include="src\utils">
       <UniqueIdentifier>{4727ed74-6edb-4e5e-aa95-64b7d3e14877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\serializer">
+      <UniqueIdentifier>{4165e2eb-62bc-4680-82a6-ea8c2dca564f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\serializer\Serializer.cpp">
+      <Filter>src\serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Snake.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\serializer\Serializer.h">
+      <Filter>src\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\GameState.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Snake.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
