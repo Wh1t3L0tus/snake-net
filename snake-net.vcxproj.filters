@@ -4,6 +4,15 @@
     <Filter Include="src">
       <UniqueIdentifier>{c3b0dfde-6c2e-4d1d-98bc-1ca619b384af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\network">
+      <UniqueIdentifier>{05a21c50-6419-4979-a148-96c0ba8bfffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\game">
+      <UniqueIdentifier>{d0e2c177-024d-46e4-b75d-cd8136156db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{4727ed74-6edb-4e5e-aa95-64b7d3e14877}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
