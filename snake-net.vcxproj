@@ -136,12 +136,9 @@
   <ItemGroup>
     <ClCompile Include="src\game\Snake.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\serializer\Serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\Snake.h" />
-    <ClInclude Include="src\serializer\Serializer.h" />
-    <ClInclude Include="src\utils\GameState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
