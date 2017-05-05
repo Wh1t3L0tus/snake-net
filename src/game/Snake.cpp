@@ -24,9 +24,18 @@ sf::Vector2f Snake::getHeadPosition() const {
 }
 
 void Snake::setDirection(Direction dir) {
-	
-	if (dir != Direction::NONE) {
 
+	if (dir == Direction::NONE
+		|| dir == direction
+		|| dir == Direction::UP && direction == Direction::DOWN
+		|| dir == Direction::DOWN && direction == Direction::UP
+		|| dir == Direction::LEFT && direction == Direction::RIGHT
+		|| dir == Direction::RIGHT && direction == Direction::LEFT)
+	{
+		return;
+	}
+	else 
+	{
 		direction = dir;
 	}
 }
@@ -85,9 +94,9 @@ void Snake::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	sf::Sprite head = headSprite;
 	sf::Sprite body = bodySprite;
 	
-	for (auto it = bodyPositions.begin(); it != bodyPositions.end(); ++it) {
+	for (auto rit = bodyPositions.rbegin(); rit != bodyPositions.rend(); ++rit) {
 
-		target.draw(*it, states);
+		target.draw(*rit, states);
 	}
 }
 

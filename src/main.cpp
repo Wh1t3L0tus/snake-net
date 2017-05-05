@@ -10,13 +10,13 @@ int main()
 
 	sf::Texture headTex;
 	sf::Texture bodyTex;
-	if (!headTex.loadFromFile("Assets/snake-head.png")) {
-		std::cerr << "Couldn't load snake-head.png" << std::endl;
+	if (!headTex.loadFromFile("Assets/snake-head2.png")) {
+		std::cerr << "Couldn't load snake-head2.png" << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	if (!bodyTex.loadFromFile("Assets/snake-body.png")) {
-		std::cerr << "Couldn't load snake-body.png" << std::endl;
+	if (!bodyTex.loadFromFile("Assets/snake-body2.png")) {
+		std::cerr << "Couldn't load snake-body2.png" << std::endl;
 		return EXIT_FAILURE;
 	}
 
