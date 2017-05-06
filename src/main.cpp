@@ -1,7 +1,15 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <ctime> // time(0) for srand()
 
 #include "game/Snake.h"
+
+const std::string SNAKE_DEFAULT_SPRITE = "Assets/snake-default.png";
+
+float Random01() 
+{
+	return ((float)std::rand() / (RAND_MAX)) + 1.0f;
+}
 
 int main()
 {
@@ -10,18 +18,24 @@ int main()
 
 	sf::Texture headTex;
 	sf::Texture bodyTex;
-	if (!headTex.loadFromFile("Assets/snake-head2.png")) {
-		std::cerr << "Couldn't load snake-head2.png" << std::endl;
+
+	if (!headTex.loadFromFile(SNAKE_DEFAULT_SPRITE, sf::IntRect(0, 0, 20, 20))) {
+		std::cerr << "Couldn't load head from snake-default.png" << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	if (!bodyTex.loadFromFile("Assets/snake-body2.png")) {
-		std::cerr << "Couldn't load snake-body2.png" << std::endl;
+	if (!bodyTex.loadFromFile(SNAKE_DEFAULT_SPRITE, sf::IntRect(20, 0, 20, 20))) {
+		std::cerr << "Couldn't load body from snake-default.png" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	sf::Sprite head(headTex); 
 	sf::Sprite body(bodyTex);
+
+	std::srand(time(0));
+	sf::Color clr = sf::Color(Random01() * 255, Random01() * 255, Random01() * 255);
+	std::cout << "R : " << (int)clr.r << " G : " << (int)clr.g << " B : " << (int)clr.b << std::endl;
+	body.setColor(clr);
+	head.setColor(clr);
 
 	Snake snake(head, body, sf::Vector2f(400.0f, 300.0f), Snake::Direction::RIGHT);
 
