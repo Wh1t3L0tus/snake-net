@@ -136,9 +136,14 @@
   <ItemGroup>
     <ClCompile Include="src\game\Snake.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\network\Network.cpp" />
+    <ClCompile Include="src\network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\Direction.h" />
     <ClInclude Include="src\game\Snake.h" />
+    <ClInclude Include="src\network\Network.h" />
+    <ClInclude Include="src\network\Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

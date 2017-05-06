@@ -4,20 +4,14 @@
 #include <SFML\Graphics.hpp>
 #include <list>
 
+#include "Direction.h"
+
 /**
  * Describe the move behavior of our snakes and how to draw them on screen
  */
 class Snake : public sf::Drawable {
 
 public:
-
-	enum Direction {
-		UP,
-		DOWN,
-		RIGHT,
-		LEFT,
-		NONE
-	};
 
 	/** Constructor
 	 * 

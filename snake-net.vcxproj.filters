@@ -18,10 +18,25 @@
     <ClCompile Include="src\game\Snake.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\network\Server.cpp">
+      <Filter>src\network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\network\Network.cpp">
+      <Filter>src\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\Snake.h">
       <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\Server.h">
+      <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Direction.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\Network.h">
+      <Filter>src\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

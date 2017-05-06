@@ -1,0 +1,12 @@
+#ifndef DIRECTION_H_INCLUDED
+#define DIRECTION_H_INCLUDED
+
+enum Direction {
+	UP,
+	DOWN,
+	RIGHT,
+	LEFT,
+	NONE
+};
+
+#endif // !DIRECTION_H_INCLUDED
