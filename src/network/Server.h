@@ -16,7 +16,7 @@ struct Player {
 	Direction direction;
 };
 
-struct Client {
+struct ClientStruct {
 
 	std::shared_ptr<sf::TcpSocket> socket;
 	std::vector<Player> players;
@@ -28,6 +28,9 @@ class Server {
 public:
 
 	Server(const std::string& ip, int port, int playerCount, float tickDuration, std::string mapName);
+
+	~Server();
+
 
 	// Start server :
 	//   - accept 'playerCount' players
@@ -69,7 +72,7 @@ private:
 	float tickDuration;
 	std::string mapName;
 
-	std::vector<Client> clients;
+	std::vector<ClientStruct> clients;
 };
 
 

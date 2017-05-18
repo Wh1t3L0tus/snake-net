@@ -10,6 +10,16 @@ Server::Server(const std::string& ip, int port, int playerCount, float tickDurat
 	tickDuration(tickDuration),
 	mapName(mapName) {}
 
+Server::~Server() {
+
+	for (auto it = clients.begin(); it != clients.end(); ++it) {
+
+		std::cout << "Waiting completion of client thread for socket " << it->socket->getRemoteAddress() << ":" << it->socket->getRemotePort() << std::endl;
+		it->socket->disconnect();
+		it->listenerThread.join();
+	}
+}
+
 bool Server::start() {
 
 	// Bind server socket to port
@@ -93,6 +103,7 @@ void Server::gameLoop() {
 			elapsedTime = clock.getElapsedTime();
 		}
 	}
+	std::cout << "Leaving game loop" << std::endl;
 }
 
 bool Server::onAcceptClient(std::shared_ptr<sf::TcpSocket> clientSocket, int& connectedPlayers) {
@@ -124,7 +135,7 @@ bool Server::onAcceptClient(std::shared_ptr<sf::TcpSocket> clientSocket, int& co
 	}
 
 	clients.push_back(
-		Client {
+		ClientStruct {
 			clientSocket,
 			playerList
 		}
@@ -176,7 +187,8 @@ void Server::startListenerThreads() {
 			sf::Packet packet;
 			InputList inputList;
 
-			while (socket->receive(packet) != sf::Socket::Done) {
+			std::cout << "Started thread for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
+			while (socket->receive(packet) == sf::Socket::Done) {
 
 				packet >> inputList;
 
@@ -184,7 +196,8 @@ void Server::startListenerThreads() {
 					
 					players[i].direction = inputList.inputs[i];
 				}
-			}
+				std::cout << "Received input for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
+			}  
 
 			std::cout << "Thread terminated " << socket->getRemoteAddress() << " " << socket->getRemotePort() << std::endl;
 		});

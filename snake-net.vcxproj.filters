@@ -24,6 +24,9 @@
     <ClCompile Include="src\network\Network.cpp">
       <Filter>src\network</Filter>
     </ClCompile>
+    <ClCompile Include="src\network\Client.cpp">
+      <Filter>src\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\Snake.h">
@@ -36,6 +39,9 @@
       <Filter>src\game</Filter>
     </ClInclude>
     <ClInclude Include="src\network\Network.h">
+      <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\Client.h">
       <Filter>src\network</Filter>
     </ClInclude>
   </ItemGroup>

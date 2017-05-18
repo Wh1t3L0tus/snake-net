@@ -51,8 +51,12 @@ sf::Packet& operator>>(sf::Packet& packet, ClientInfo& info) {
 	packet >> info.localPlayerCount;
 
 	for (char i = 0; i < info.localPlayerCount; i++) {
+		int id;
+		sf::Color color;
+		
+		packet >> id >> color;
 
-		packet >> info.infos[i].first >> info.infos[i].second;
+		info.infos.push_back(std::pair<int, sf::Color>(id, color));
 	}
 
 	return packet;

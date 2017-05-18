@@ -1,6 +1,6 @@
 #include <iostream>
 #include "network/Server.h"
-
+#include "network/Client.h"
 
 int main(int argc, char** argv)
 {
@@ -16,6 +16,13 @@ int main(int argc, char** argv)
 		Server server("127.0.0.1", 8888, 2, 0.5f, "test");
 		
 		std::cout << std::boolalpha << server.start() << std::endl;
+	}
+	else if (CLIENT_MODE == argv[1]) {
+
+		std::vector<sf::Color> colors;
+		colors.push_back(sf::Color::Red);
+		Client client;
+		client.Start("127.0.0.1", 8888, colors);
 	}
 
 	return 0;
