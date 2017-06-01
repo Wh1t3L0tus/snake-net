@@ -191,6 +191,7 @@ void Server::startListenerThreads() {
 			while (socket->receive(packet) == sf::Socket::Done) {
 
 				packet >> inputList;
+				packet.clear();
 
 				for (int i = 0; i < inputList.nbInput; i++) {
 					

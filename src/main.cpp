@@ -1,6 +1,7 @@
 #include <iostream>
 #include "network/Server.h"
-#include "network/Client.h"
+
+#include "game\Game.h"
 
 int main(int argc, char** argv)
 {
@@ -19,10 +20,8 @@ int main(int argc, char** argv)
 	}
 	else if (CLIENT_MODE == argv[1]) {
 
-		std::vector<sf::Color> colors;
-		colors.push_back(sf::Color::Red);
-		Client client;
-		client.Start("127.0.0.1", 8888, colors);
+		Game game;
+		game.MainLoop();
 	}
 
 	return 0;

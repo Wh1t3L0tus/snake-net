@@ -6,8 +6,20 @@
 Client::Client() {}
 
 bool Client::Start(const std::string& ip, int port, const std::vector<sf::Color>& playersColor) {
+	bool configureResult = Configure(ip, port, playersColor);
 
-	sf::TcpSocket socket;
+	if (configureResult) {
+		StartThreads();
+	}
+	else {
+		std::cout << "Configure failed !" << std::endl;
+	}
+
+	return configureResult;
+}
+
+bool Client::Configure(const std::string& ip, int port, const std::vector<sf::Color>& playersColor) {
+
 	sf::Socket::Status status = socket.connect(ip, port);
 	if (status != sf::Socket::Done)
 	{
@@ -58,3 +70,70 @@ bool Client::Start(const std::string& ip, int port, const std::vector<sf::Color>
 	return true;
 }
 
+void Client::SetLocalPlayersInputs(const InputList& inputs) {
+	
+	senderMutex.lock();
+	inputsToSend = inputs;
+	shouldSendInputs = true;
+	senderMutex.unlock();
+}
+
+bool Client::FetchInputsFromServer(InputList& inputs) {
+
+	bool result = false;
+	receiverMutex.lock();
+	if (receivedServerResponse) {
+
+		inputs = receivedInputs;
+		receivedServerResponse = false;
+		result = true;
+	}
+	receiverMutex.unlock();
+
+	return result;
+}
+
+void Client::ReceiveLoop() {
+
+	sf::Packet packet;
+	while (socket.receive(packet) == sf::Socket::Done) {
+
+		receiverMutex.lock();
+		packet >> receivedInputs;
+		receivedServerResponse = true;
+		receiverMutex.unlock();
+
+		packet.clear();
+	}
+
+	std::cout << "Receiver thread aborting" << std::endl;
+}
+
+void Client::SendLoop() {
+
+	sf::Socket::Status status = sf::Socket::Done;
+	sf::Packet packet;
+
+	while (true) {
+
+		senderMutex.lock();
+		if (shouldSendInputs) {
+
+			packet << inputsToSend;
+			status = socket.send(packet);
+			shouldSendInputs = false;
+		}
+		senderMutex.unlock();
+
+		if (status != sf::Socket::Done) {
+			break;
+		}
+	}
+
+	std::cout << "Sender thread aborting" << std::endl;
+}
+
+void Client::StartThreads() {
+	senderThread = std::thread(&Client::SendLoop, this);
+	receiverThread = std::thread(&Client::ReceiveLoop, this);
+}

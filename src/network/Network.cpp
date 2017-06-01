@@ -48,6 +48,8 @@ sf::Packet& operator<<(sf::Packet& packet, const ClientInfo& info) {
 
 sf::Packet& operator>>(sf::Packet& packet, ClientInfo& info) {
 
+	info.infos.clear();
+
 	packet >> info.localPlayerCount;
 
 	for (char i = 0; i < info.localPlayerCount; i++) {
@@ -76,13 +78,15 @@ sf::Packet& operator<<(sf::Packet& packet, const InputList& inputs) {
 
 sf::Packet& operator>>(sf::Packet& packet, InputList& inputs) {
 
+	inputs.inputs.clear();
+
 	packet >> inputs.nbInput;
 
 	for (char i = 0; i < inputs.nbInput; i++) {
 		
 		sf::Int8 data;
 		packet >> data;
-		inputs.inputs[i] = static_cast<Direction>(data);
+		inputs.inputs.push_back(static_cast<Direction>(data));
 	}
 
 	return packet;
