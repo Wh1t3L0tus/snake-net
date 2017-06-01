@@ -14,6 +14,7 @@ public:
 private:
 
 	Client client;
+	Direction lastDir;
 
 };
 

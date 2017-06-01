@@ -51,12 +51,14 @@ void Game::MainLoop() {
 			dir = Direction::DOWN;
 		}
 
-		if (dir != Direction::NONE) {
+		if (dir != Direction::NONE && dir != lastDir) {
 			InputList localInputs;
 			localInputs.nbInput = 1;
 			localInputs.inputs.push_back(dir);
 			client.SetLocalPlayersInputs(localInputs);
 		}
+
+		lastDir = dir;
 
 		InputList fetchedInputs;
 		if (client.FetchInputsFromServer(fetchedInputs)) {
