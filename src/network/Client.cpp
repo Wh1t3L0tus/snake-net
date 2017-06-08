@@ -127,6 +127,7 @@ void Client::SendLoop() {
 			packet << inputsToSend;
 			status = socket.send(packet);
 			shouldSendInputs = false;
+			packet.clear();
 		}
 		senderMutex.unlock();
 

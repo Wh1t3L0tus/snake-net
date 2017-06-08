@@ -3,6 +3,10 @@
 
 #include "game\Game.h"
 
+
+#include <SFML/Network.hpp>
+
+
 int main(int argc, char** argv)
 {
 	if (argc != 2) {
@@ -23,6 +27,7 @@ int main(int argc, char** argv)
 		Game game;
 		game.MainLoop();
 	}
+	
 
 	return 0;
 }

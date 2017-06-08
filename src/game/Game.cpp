@@ -21,22 +21,10 @@ void Game::MainLoop() {
 
 	GameState gameState;
 	gameState.Initialize(client.GetGameSettings());
-	std::cout << std::endl;
-	std::vector<CellState> mapState = gameState.GetMap();
-	for (size_t j = 0; j < gameState.height; j++)
-	{
-		for (size_t i = 0; i < gameState.width; i++)
-		{
-			std::cout << drawChar(mapState[i + j * gameState.width]);
-		}
-		std::cout << std::endl;
-	}
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Snake-net-client");
 
 	while (window.isOpen()) {
-
-		//std::cerr << "frame" << std::endl;
 
 		// Read mouse and keyboard inputs
 		sf::Event event;
@@ -75,10 +63,11 @@ void Game::MainLoop() {
 
 		InputList fetchedInputs;
 		if (client.FetchInputsFromServer(fetchedInputs)) {
+
 			// update game state
 			gameState.Update(fetchedInputs);
 
-			//DisplayGameInConsole();
+			DisplayGameInConsole(gameState);
 		}
 
 		// Draw window

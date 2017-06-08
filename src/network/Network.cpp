@@ -71,13 +71,10 @@ sf::Packet& operator>>(sf::Packet& packet, ClientInfo& info) {
 sf::Packet& operator<<(sf::Packet& packet, const InputList& inputs) {
 
 	packet << inputs.nbInput;
-	std::cout << "To packet : " << inputs.nbInput;
 	for (char i = 0; i < inputs.nbInput; i++) {
 
 		packet << static_cast<int>(inputs.inputs[i]);
-		std::cout << " " << static_cast<int>(inputs.inputs[i]) << " ";
 	}
-	std::cout << std::endl;
 	return packet;
 }
 
@@ -86,16 +83,13 @@ sf::Packet& operator>>(sf::Packet& packet, InputList& inputs) {
 	inputs.inputs.clear();
 
 	packet >> inputs.nbInput;
-	std::cout << "From packet : " << inputs.nbInput;
 
 	for (char i = 0; i < inputs.nbInput; i++) {
 		
 		int data;
 		packet >> data;
-		std::cout << " " << data << " ";
 		inputs.inputs.push_back(static_cast<Direction>(data));
 	}
-	std::cout << std::endl;
 
 	return packet;
 }

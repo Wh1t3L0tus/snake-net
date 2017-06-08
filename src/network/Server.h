@@ -49,6 +49,8 @@ private:
 
 	void gameLoop();
 
+	void listenLoop(ClientStruct* client);
+
 	/** Accepts a client
 	 * @param client : new accepted client
 	 * @param connectedPlayers : number of connected players
@@ -75,7 +77,7 @@ private:
 
 	std::vector<ClientStruct> clients;
 
-	std::mutex playerMutex;
+	std::mutex inputListMutex;
 };
 
 

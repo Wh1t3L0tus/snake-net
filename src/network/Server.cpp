@@ -95,12 +95,14 @@ void Server::gameLoop() {
 
 		if ((clock.getElapsedTime() - elapsedTime).asSeconds() >= tickDuration) {
 
+			inputListMutex.lock();
 			fillInputList(inputList);
 
 			if (!broadcastInputList(inputList)) {
 				std::cerr << "Error couldn't send input list to all clients" << std::endl;
 				quit = true;
 			}
+			inputListMutex.unlock();
 
 			elapsedTime = clock.getElapsedTime();
 		}
@@ -179,32 +181,32 @@ GameSettings Server::createGameSettings() {
 
 void Server::startListenerThreads() {
 
-	for (auto it = clients.begin(); it != clients.end(); ++it) {
+	for (int i = 0; i < clients.size(); i++) {
 
-		std::shared_ptr<sf::TcpSocket> socket = it->socket;
-		std::vector<Player>& players = it->players;
-
-		it->listenerThread = std::thread([socket, players] () mutable {
-
-			sf::Packet packet;
-			InputList inputList;
-
-			std::cout << "Started thread for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
-			while (socket->receive(packet) == sf::Socket::Done) {
-
-				packet >> inputList;
-				packet.clear();
-
-				for (int i = 0; i < inputList.nbInput; i++) {
-					
-					players[i].direction = inputList.inputs[i];
-				}
-				//std::cout << "Received input for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
-			}  
-
-			std::cout << "Thread terminated " << socket->getRemoteAddress() << " " << socket->getRemotePort() << std::endl;
-		});
+		clients[i].listenerThread = std::thread(&Server::listenLoop, this, &clients[i]);
 	}
+}
+
+void Server::listenLoop(ClientStruct* client) {
+
+	sf::Packet packet;
+	InputList inputList;
+
+	std::cout << "Started thread for " << client->socket->getRemoteAddress() << ":" << client->socket->getRemotePort() << std::endl;
+	while (client->socket->receive(packet) == sf::Socket::Done) {
+
+		inputListMutex.lock();
+		packet >> inputList;
+		packet.clear();
+
+		for (int i = 0; i < inputList.nbInput; i++) {
+
+			client->players[i].direction = inputList.inputs[i];
+		}
+		inputListMutex.unlock();
+	}
+
+	std::cout << "Thread terminated " << client->socket->getRemoteAddress() << " " << client->socket->getRemotePort() << std::endl;
 }
 
 void Server::fillInputList(InputList& inputList) {
