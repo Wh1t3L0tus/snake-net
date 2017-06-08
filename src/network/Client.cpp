@@ -53,18 +53,18 @@ bool Client::Configure(const std::string& ip, int port, const std::vector<sf::Co
 		std::cerr << "Error while receiving player's IDs..." << std::endl;
 		return false;
 	}
-	std::cout << "Received client infos !" << std::endl;
 	packet >> infos;
+	std::cout << "Received client infos !" << std::endl;
 
 
 	// Receive game settings
-	GameSettings gameSettings;
 	packet.clear();
 	std::cout << "Awaiting gamesettings..." << std::endl;
 	if (socket.receive(packet) != sf::Socket::Done) {
 		std::cerr << "Error while receiving GameSettings..." << std::endl;
 		return false;
 	}
+	packet >> gameSettings;
 	std::cout << "Gamesettings received !" << std::endl;
 
 	return true;
@@ -91,6 +91,11 @@ bool Client::FetchInputsFromServer(InputList& inputs) {
 	receiverMutex.unlock();
 
 	return result;
+}
+
+GameSettings Client::GetGameSettings() const
+{
+	return gameSettings;
 }
 
 void Client::ReceiveLoop() {

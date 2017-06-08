@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <thread>
+#include <mutex>
 #include <SFML/Network.hpp>
 #include <SFML/Graphics/Color.hpp>
 
@@ -73,6 +74,8 @@ private:
 	std::string mapName;
 
 	std::vector<ClientStruct> clients;
+
+	std::mutex playerMutex;
 };
 
 

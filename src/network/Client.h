@@ -25,6 +25,7 @@ public:
 	// Returns true if inputs were received from server and fill "inputs"
 	bool FetchInputsFromServer(InputList& inputs);
 
+	GameSettings GetGameSettings() const;
 
 private:
 
@@ -43,6 +44,8 @@ private:
 	std::thread receiverThread;
 	std::thread senderThread;
 	sf::TcpSocket socket;
+
+	GameSettings gameSettings;
 
 	std::mutex senderMutex;
 	std::mutex receiverMutex;

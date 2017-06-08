@@ -7,6 +7,8 @@ Snake::Snake(sf::Vector2i startPosition, Direction startDirection, int startSize
 	bodyPositions.push_front(startPosition);
 	currentDirection = startDirection;
 	growCounter = startSize - 1;
+
+	isDead = false;
 }
 
 Direction Snake::GetDirection() const

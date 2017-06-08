@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
 	if (SERVER_MODE == argv[1]) {
 
-		Server server("127.0.0.1", 8888, 2, 0.5f, "test");
+		Server server("127.0.0.1", 8888, 2, 2.0f, "test");
 		
 		std::cout << std::boolalpha << server.start() << std::endl;
 	}

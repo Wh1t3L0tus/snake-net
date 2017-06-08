@@ -3,7 +3,7 @@
 
 
 #include "Game.h"
-#include "../game/Direction.h"
+#include "Direction.h"
 
 Game::Game() {
 
@@ -12,18 +12,31 @@ Game::Game() {
 void Game::MainLoop() {
 
 	std::vector<sf::Color> playerColors;
-	playerColors.push_back(sf::Color::Red);
+	playerColors.push_back(getRandomColor());
 
 	if (!client.Start("127.0.0.1", 8888, playerColors)) {
 		std::cerr << "Error while starting client" << std::endl;
 		return;
 	}
 
+	GameState gameState;
+	gameState.Initialize(client.GetGameSettings());
+	std::cout << std::endl;
+	std::vector<CellState> mapState = gameState.GetMap();
+	for (size_t j = 0; j < gameState.height; j++)
+	{
+		for (size_t i = 0; i < gameState.width; i++)
+		{
+			std::cout << drawChar(mapState[i + j * gameState.width]);
+		}
+		std::cout << std::endl;
+	}
+
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Snake-net-client");
 
 	while (window.isOpen()) {
 
-		std::cerr << "frame" << std::endl;
+		//std::cerr << "frame" << std::endl;
 
 		// Read mouse and keyboard inputs
 		sf::Event event;
@@ -63,14 +76,66 @@ void Game::MainLoop() {
 		InputList fetchedInputs;
 		if (client.FetchInputsFromServer(fetchedInputs)) {
 			// update game state
-			for (int i = 0; i < fetchedInputs.inputs.size(); i++) {
-				std::cout << "Player " << i << " input " << fetchedInputs.inputs[i] << std::endl;
-			}
+			gameState.Update(fetchedInputs);
+
+			//DisplayGameInConsole();
 		}
 
 		// Draw window
 		window.clear();
 
+
 		window.display();
+	}
+}
+
+void Game::DisplayGameInConsole(GameState gameState) const 
+{
+	std::cout << std::endl;
+	std::vector<CellState> mapState = gameState.GetMap();
+	for (size_t j = 0; j < gameState.height; j++)
+	{
+		for (size_t i = 0; i < gameState.width; i++)
+		{
+			std::cout << drawChar(mapState[i + j * gameState.width]);
+		}
+		std::cout << std::endl;
+	}
+}
+
+char Game::drawChar(CellState state) const
+{
+	switch (state)
+	{
+		case EMPTY: return ' ';
+		case WALL: return '#';
+		case APPLE: return '0';
+		case SNAKE_0: return 'a';
+		case SNAKE_0_H: return 'A';
+		case SNAKE_1: return 'b';
+		case SNAKE_1_H: return 'B';
+		case SNAKE_2: return 'c';
+		case SNAKE_2_H: return 'C';
+		case SNAKE_3: return 'd';
+		case SNAKE_3_H: return 'D';
+		case SNAKE_4: return 'e'; 
+		case SNAKE_4_H: return 'E';
+		default: return 'X';
+	}
+}
+
+sf::Color Game::getRandomColor() const
+{
+	int r = (int)(((double)rand() / RAND_MAX) * 8);
+	switch (r)
+	{
+		case 0: return sf::Color::Black;
+		case 1: return sf::Color::Blue;
+		case 2: return sf::Color::Cyan;
+		case 3: return sf::Color::Green;
+		case 4: return sf::Color::Magenta;
+		case 5: return sf::Color::Red;
+		case 6: return sf::Color::Yellow;
+		default: return sf::Color::White;
 	}
 }

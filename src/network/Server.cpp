@@ -29,6 +29,8 @@ bool Server::start() {
 		return false;
 	}
 
+	std::cout << "Server started. Waiting for connections." << std::endl;
+
 	if (!lobbyLoop()) {
 		std::cerr << "Error while accepting connections" << std::endl;
 		return false;
@@ -197,7 +199,7 @@ void Server::startListenerThreads() {
 					
 					players[i].direction = inputList.inputs[i];
 				}
-				std::cout << "Received input for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
+				//std::cout << "Received input for " << socket->getRemoteAddress() << ":" << socket->getRemotePort() << std::endl;
 			}  
 
 			std::cout << "Thread terminated " << socket->getRemoteAddress() << " " << socket->getRemotePort() << std::endl;

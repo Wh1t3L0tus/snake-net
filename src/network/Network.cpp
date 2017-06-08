@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Network.h"
 
 sf::Packet& operator<<(sf::Packet& packet, const sf::Color& c) {
@@ -28,7 +30,9 @@ sf::Packet& operator>>(sf::Packet& packet, GameSettings& s) {
 
 	for (char i = 0; i < s.playerCount; i++) {
 
-		packet >> s.playerColors[i];
+		sf::Color color;
+		packet >> color;
+		s.playerColors.push_back(color);
 	}
 
 	return packet;
@@ -67,12 +71,13 @@ sf::Packet& operator>>(sf::Packet& packet, ClientInfo& info) {
 sf::Packet& operator<<(sf::Packet& packet, const InputList& inputs) {
 
 	packet << inputs.nbInput;
-
+	std::cout << "To packet : " << inputs.nbInput;
 	for (char i = 0; i < inputs.nbInput; i++) {
 
-		packet << static_cast<sf::Int8>(inputs.inputs[i]);
+		packet << static_cast<int>(inputs.inputs[i]);
+		std::cout << " " << static_cast<int>(inputs.inputs[i]) << " ";
 	}
-
+	std::cout << std::endl;
 	return packet;
 }
 
@@ -81,13 +86,16 @@ sf::Packet& operator>>(sf::Packet& packet, InputList& inputs) {
 	inputs.inputs.clear();
 
 	packet >> inputs.nbInput;
+	std::cout << "From packet : " << inputs.nbInput;
 
 	for (char i = 0; i < inputs.nbInput; i++) {
 		
-		sf::Int8 data;
+		int data;
 		packet >> data;
+		std::cout << " " << data << " ";
 		inputs.inputs.push_back(static_cast<Direction>(data));
 	}
+	std::cout << std::endl;
 
 	return packet;
 }

@@ -20,22 +20,26 @@ void GameState::Initialize(GameSettings gameSettings)
 		}
 	}
 
+	std::cout << "[GameState] Player count : " << (int)gameSettings.playerCount << std::endl;
+
 	// créer les snakes et initialiser la LookUpTable
 	for (size_t s = 0; s < gameSettings.playerCount; s++)
 	{
 		snakes.push_back(Snake(sf::Vector2i(2, 2 + s), RIGHT, 3));
 
-		snakeLUT.emplace(s, SNAKE_0 << (2 * s));
+		snakeLUT.emplace(s, static_cast<CellState>(SNAKE_0 << (2 * s)));
 
-		AddBit(CellAt(snakes[s].bodyPositions.front), GetHeadBit(snakeLUT[s]));
+		AddBit(CellAt(snakes[s].bodyPositions.front()), GetHeadBit(snakeLUT[s]));
 	}
 }
 
-std::vector<CellState> GameState::Update(InputList inputsList)
+void GameState::Update(InputList inputsList)
 {
 	for (int s = 0; s < inputsList.nbInput; s++)
 	{
 		snakes[s].SetDirection(inputsList.inputs[s]);
+
+		//std::cout << "Input = " << inputsList.inputs[s] << "; Snake new direction = " << snakes[s].GetDirection() << std::endl;
 
 		MakeSnakeMove(snakes[s], snakeLUT[s]);
 	}
@@ -43,11 +47,9 @@ std::vector<CellState> GameState::Update(InputList inputsList)
 	ResolveCollisions();
 
 	CleanMapFromDeadSnakes();
-
-	return map;
 }
 
-void GameState::MakeSnakeMove(Snake snake, CellState id)
+void GameState::MakeSnakeMove(Snake& snake, CellState id)
 {
 	// make snake head move in his direction, 
 	// (that have already been set) 
@@ -58,7 +60,7 @@ void GameState::MakeSnakeMove(Snake snake, CellState id)
 		return;
 	}
 
-	sf::Vector2i currentHeadPos = snake.bodyPositions.front;
+	sf::Vector2i currentHeadPos = snake.bodyPositions.front();
 
 	sf::Vector2i newHeadPos = currentHeadPos;
 	switch (snake.GetDirection())
@@ -116,8 +118,9 @@ void GameState::ResolveCollisions()
 			{
 				CellState snakeHeadValue = GetHeadBit(snakeLUT[s]);
 
-				if ((curr & snakeHeadValue == snakeHeadValue) && (curr != snakeHeadValue))
+				if (((curr & snakeHeadValue) == snakeHeadValue) && (curr != snakeHeadValue))
 				{
+					std::cout << "Snake " << s << " had been killed. (" << curr << ")" << std::endl;
 					snakes[s].isDead = true;
 				}
 			}
@@ -133,7 +136,7 @@ void GameState::CleanMapFromDeadSnakes()
 		{
 			while (!snakes[s].bodyPositions.empty())
 			{
-				sf::Vector2i pos = snakes[s].bodyPositions.front;
+				sf::Vector2i pos = snakes[s].bodyPositions.front();
 				snakes[s].bodyPositions.pop_front();
 
 				// We could optim checking the head only once
@@ -154,17 +157,17 @@ CellState & GameState::CellAt(int x, int y)
 	return map[y * width + x];
 }
 
-CellState GameState::AddBit(CellState state, CellState bit) const
+void GameState::AddBit(CellState& state, const CellState bit)
 {
-	return static_cast<CellState>(state | bit);
+	state = static_cast<CellState>(state | bit);
 }
 
-CellState GameState::RemoveBit(CellState state, CellState bit) const
+void GameState::RemoveBit(CellState& state, const CellState bit)
 {
-	return static_cast<CellState>(state & ~bit);
+	state = static_cast<CellState>(state & ~bit);
 }
 
-CellState GameState::GetHeadBit(CellState bit) const 
+CellState GameState::GetHeadBit(const CellState bit) const 
 {
 	return static_cast<CellState>(bit << 1);
 }
