@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\game\Game.cpp" />
+    <ClCompile Include="src\game\GameState.cpp" />
     <ClCompile Include="src\game\Snake.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\network\Client.cpp" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="src\game\Direction.h" />
     <ClInclude Include="src\game\Game.h" />
+    <ClInclude Include="src\game\GameState.h" />
     <ClInclude Include="src\game\Snake.h" />
     <ClInclude Include="src\network\Client.h" />
     <ClInclude Include="src\network\Network.h" />

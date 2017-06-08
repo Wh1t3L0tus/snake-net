@@ -30,6 +30,9 @@
     <ClCompile Include="src\game\Game.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\GameState.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\Snake.h">
@@ -48,6 +51,9 @@
       <Filter>src\network</Filter>
     </ClInclude>
     <ClInclude Include="src\game\Game.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameState.h">
       <Filter>src\game</Filter>
     </ClInclude>
   </ItemGroup>
