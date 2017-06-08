@@ -2,23 +2,36 @@
 #define GAME_STATE_H
 
 #include <vector>
+#include <string>
+
+#include "Snake.h"
+#include "..\network\Network.h"
 
 enum CellState {
 	EMPTY = 0,
 	WALL = 1,
-	SNAKE_1 = 2,
-	SNAKE_2 = 4,
-	SNAKE_3 = 8,
-	SNAKE_4 = 16,
-	SNAKE_5 = 32,
-	SNAKE_6 = 64,
-	SNAKE_7 = 128
+	APPLE = 2,
+	SNAKE_0 = 4,
+	SNAKE_0_H = 8,
+	SNAKE_1 = 16,
+	SNAKE_1_H = 32,
+	SNAKE_2 = 64,
+	SNAKE_2_H = 128,
+	SNAKE_3 = 256,
+	SNAKE_3_H = 512,
+	SNAKE_4 = 1024,
+	SNAKE_4_H = 2048
 };
 
 class GameState {
 
-	
+public:
 
+	void Initialize(GameSettings gameSettings);
+	std::vector<CellState> Update(InputList inputsList);
+
+	bool IsGameOver() const;
+	std::string GetGameOverMessage() const;
 
 private:
 
@@ -26,6 +39,21 @@ private:
 	int height;
 
 	std::vector<CellState> map;
+	std::vector<Snake> snakes;
+
+	// snake ID ; corresponding enum
+	std::map<int, CellState> snakeLUT;
+
+	void MakeSnakeMove(Snake snake, CellState id);
+	void ResolveCollisions();
+	void CleanMapFromDeadSnakes();
+
+	CellState& CellAt(sf::Vector2i);
+	CellState& CellAt(int x, int y);
+
+	CellState AddBit(CellState state, CellState bit) const;
+	CellState RemoveBit(CellState state, CellState bit) const;
+	CellState GetHeadBit(CellState bit) const;
 };
 
-#endif // 
+#endif // GAME_STATE_H
