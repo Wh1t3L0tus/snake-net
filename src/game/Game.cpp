@@ -10,15 +10,22 @@ float TILE_SIZE = 20.0f;
 Game::Game(const std::string& ip, int port, const sf::Color& localPlayerColor) :
 	ip(ip),
 	port(port),
-	localPlayerColor(localPlayerColor) {}
+	localPlayerColor(localPlayerColor) 
+{
+	gamePhase = CREATE_WINDOW;
+}
 
 bool Game::LoadResources() {
 
 	if (!spriteSheet.loadFromFile("Assets/spritesheet.png") ||
-		!explosionTexture.loadFromFile("Assets/explosion.png"))
+		!explosionTexture.loadFromFile("Assets/explosion.png") ||
+		!titleTexture.loadFromFile("Assets/title.png"))
 	{
 		return false;
 	}
+
+	titleSprite.setTexture(titleTexture);
+	titleSprite.setOrigin(titleTexture.getSize().x / 2, titleTexture.getSize().y / 2);
 
 	LoadSpriteForSheet(wallSprite, 5, 0);
 	LoadSpriteForSheet(backgroundSprite, 5, 1);
@@ -35,6 +42,36 @@ bool Game::LoadResources() {
 void Game::MainLoop() {
 
 	std::vector<sf::Color> localPlayersColors;
+	sf::Vector2f windowSize(800, 600);
+
+	GameState gameState;
+	GameSettings settings;
+
+	sf::VideoMode VMode(windowSize.x, windowSize.y);
+	window.create(VMode, "Snake-net-client");
+
+	sf::Vector2f titleSize(titleSprite.getGlobalBounds().width * 1.25f, titleSprite.getGlobalBounds().height * 1.25f);
+
+	if (titleSize.x > windowSize.x)
+	{
+		titleSprite.scale(windowSize.x / titleSize.x, windowSize.x / titleSize.x);
+	}
+	if (titleSize.y > windowSize.y)
+	{
+		titleSprite.scale(windowSize.y / titleSize.y, windowSize.y / titleSize.y);
+	}
+
+	sf::Vector2f titlePos = windowSize;
+	titlePos.x /= 2;
+	titlePos.y /= 4;
+
+	titleSprite.setPosition(titlePos);
+
+	window.clear();
+	window.draw(titleSprite);
+	window.display();
+
+
 	localPlayersColors.push_back(localPlayerColor);
 
 	if (!client.Start(ip, port, localPlayersColors)) {
@@ -42,24 +79,23 @@ void Game::MainLoop() {
 		return;
 	}
 
-	GameState gameState;
-	GameSettings settings = client.GetGameSettings();
-	
+	settings = client.GetGameSettings();
+
 	if (!gameState.Initialize(settings)) {
 		return;
 	}
 
-	sf::Vector2f windowSize(800, 600);
-	sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Snake-net-client");
 
-	while (window.isOpen()) {
-
-		// Read mouse and keyboard inputs
-		sf::Event event;
-		while (window.pollEvent(event))
+	while (window.isOpen())
+	{
+		sf::Event evnt;
+		while (window.pollEvent(evnt))
 		{
-			if (event.type == sf::Event::Closed)
+			if (evnt.type == sf::Event::Closed)
+			{
 				window.close();
+				return;
+			}
 		}
 
 		Direction dir = Direction::NONE;

@@ -142,8 +142,7 @@ void GameState::ResolveCollisions()
 				{
 					if (curr == (snakeHeadValue | APPLE))
 					{
-						std::cout << "Snake " << s << " have eaten apple :D" << std::endl;
-						snakes[s].growCounter += 1;
+						snakes[s].growCounter += 2;
 						RemoveBit(curr, APPLE);
 						isAppleEaten = true;
 					}

@@ -4,6 +4,16 @@
 #include "../network/Client.h"
 #include "GameState.h"
 
+enum GamePhase 
+{
+	CREATE_WINDOW,
+	SENDING_CLIENT_INFO,
+	WAITING_FOR_GAME_SETTINGS,
+	IN_GAME,
+	GAME_OVER,
+	QUIT
+};
+
 class Game {
 
 public:
@@ -20,6 +30,8 @@ public:
 
 private:
 
+	sf::RenderWindow window;
+
 	float GetAngleFromDirection(Direction dir) const;
 
 	Client client;
@@ -28,21 +40,26 @@ private:
 	sf::Color getRandomColor() const;
 
 	void LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset);
-
+	
+	sf::Texture titleTexture;
 	sf::Texture spriteSheet;
 	sf::Texture explosionTexture;
-
+	
+	sf::Sprite titleSprite;
 	sf::Sprite appleSprite;
-	sf::Sprite explosionSprite;
 	sf::Sprite backgroundSprite;
 	sf::Sprite wallSprite;
 	sf::Sprite snakeHeadSprite;
 	sf::Sprite snakeBodySprite;
+	sf::Sprite explosionSprite;
 
 	std::string ip;
 	int port;
 
 	sf::Color localPlayerColor;
+
+	GamePhase gamePhase;
+	bool isGameLaunched;
 };
 
 
