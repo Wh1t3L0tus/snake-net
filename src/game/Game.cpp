@@ -7,8 +7,10 @@
 
 float TILE_SIZE = 20.0f;
 
-Game::Game() {
-}
+Game::Game(const std::string& ip, int port, const sf::Color& localPlayerColor) :
+	ip(ip),
+	port(port),
+	localPlayerColor(localPlayerColor) {}
 
 bool Game::LoadResources() {
 
@@ -40,9 +42,9 @@ bool Game::LoadResources() {
 void Game::MainLoop() {
 
 	std::vector<sf::Color> localPlayersColors;
-	localPlayersColors.push_back(sf::Color(255, 0, 0));
+	localPlayersColors.push_back(localPlayerColor);
 
-	if (!client.Start("127.0.0.1", 8888, localPlayersColors)) {
+	if (!client.Start(ip, port, localPlayersColors)) {
 		std::cerr << "Error while starting client" << std::endl;
 		return;
 	}

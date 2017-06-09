@@ -9,8 +9,9 @@
 
 int main(int argc, char** argv)
 {
-	if (argc != 2) {
-		std::cerr << "Launch mode required : server or client ?" << std::endl;
+	if (argc != 7) {
+		std::cerr << "snake-net Usage :\n" << "snake-net.exe client ip port snake-red snake-green snake-blue\n" << "snake-net.exe server ip port nbPlayers map tickDuration" << std::endl;
+		return EXIT_SUCCESS;
 	}
 
 	const std::string SERVER_MODE = "server";
@@ -18,13 +19,25 @@ int main(int argc, char** argv)
 
 	if (SERVER_MODE == argv[1]) {
 
-		Server server("127.0.0.1", 8888, 2, 2.0f, "test");
+		std::string ip = argv[2];
+		int port = std::stoi(argv[3]);
+		int nbPlayers = std::stoi(argv[4]);
+		std::string map = argv[5];
+		float tickDuration = std::stof(argv[6]);
+
+		Server server(ip, port, nbPlayers, tickDuration, map);
 		
 		std::cout << std::boolalpha << server.start() << std::endl;
 	}
 	else if (CLIENT_MODE == argv[1]) {
 
-		Game game;
+		std::string ip = argv[2];
+		int port = std::stoi(argv[3]);
+		int red = std::stoi(argv[4]);
+		int green = std::stoi(argv[5]);
+		int blue = std::stoi(argv[6]);
+
+		Game game(ip, port, sf::Color(red, green, blue));
 
 		if (game.LoadResources()) {
 			game.MainLoop();

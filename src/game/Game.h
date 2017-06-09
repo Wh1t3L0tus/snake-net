@@ -8,7 +8,7 @@ class Game {
 
 public:
 
-	Game();
+	Game(const std::string& ip, int port, const sf::Color& localPlayerColor);
 
 	void MainLoop();
 
@@ -38,6 +38,11 @@ private:
 	sf::Texture explosionTexture;
 	sf::Texture mapTexture;
 	sf::Texture snakeTexture;
+
+	std::string ip;
+	int port;
+
+	sf::Color localPlayerColor;
 };
 
 
