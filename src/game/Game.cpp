@@ -31,6 +31,8 @@ bool Game::LoadResources() {
 	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
 	snakeHeadSprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 
+	explosionSprite.setOrigin(TILE_SIZE * 1.5f / 2.0f, TILE_SIZE * 1.5f / 2.0f);
+
 	backgroundSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
 	wallSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
 
@@ -113,11 +115,14 @@ void Game::MainLoop() {
 				sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
 				sf::Vector2f headPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 
+				backgroundSprite.setPosition(position);
 				wallSprite.setPosition(position);
 				snakeBodySprite.setPosition(position);
 				snakeHeadSprite.setPosition(headPosition);
 				appleSprite.setPosition(position);
-				backgroundSprite.setPosition(position);
+				explosionSprite.setPosition(headPosition);
+
+				window.draw(backgroundSprite);
 
 				switch (cell)
 				{
@@ -176,6 +181,7 @@ void Game::MainLoop() {
 						window.draw(snakeHeadSprite);
 						break;
 					default:
+						window.draw(explosionSprite);
 						break;
 				}
 			}
