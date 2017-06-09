@@ -46,7 +46,8 @@ private:
 	sf::Sprite explosionSprite;
 
 	sf::Font font;
-
+	
+	sf::Text waitingText;
 	sf::Text loseText;
 	sf::Text winText;
 

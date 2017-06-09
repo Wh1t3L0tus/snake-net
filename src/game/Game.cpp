@@ -42,17 +42,21 @@ bool Game::LoadResources() {
 	explosionSprite.setTexture(explosionTexture);
 	explosionSprite.setOrigin(TILE_SIZE * 1.5f / 2.0f, TILE_SIZE * 1.5f / 2.0f);
 
+	waitingText.setFont(font);
 	loseText.setFont(font);
 	winText.setFont(font);
 
+	waitingText.setCharacterSize(40);
 	loseText.setCharacterSize(50);
 	winText.setCharacterSize(50);
 	
+	waitingText.setFillColor(sf::Color::Red);
 	loseText.setFillColor(sf::Color::Red);
 	winText.setFillColor(sf::Color::Red);
 
 	loseText.setString("You lose !");
 	winText.setString("You win !");
+
 
 	return true;
 }
@@ -81,9 +85,16 @@ void Game::MainLoop() {
 	titlePos.y /= 4;
 
 	titleSprite.setPosition(titlePos);
-
+	
 	window.clear();
 	window.draw(titleSprite);
+	waitingText.setString("Connection with server established.");
+	waitingText.setPosition(sf::Vector2f(windowSize.x / 2.0f - waitingText.getGlobalBounds().width / 2, windowSize.y / 2.0f));
+	window.draw(waitingText);
+	waitingText.setString("Waiting for other players.");
+	waitingText.setPosition(sf::Vector2f(windowSize.x / 2.0f - waitingText.getGlobalBounds().width / 2, windowSize.y / 2.0f + 2 * waitingText.getGlobalBounds().height));
+	window.draw(waitingText);
+
 	window.display();
 
 
@@ -191,7 +202,6 @@ void Game::MainLoop() {
 					switch (cell)
 					{
 					case EMPTY:
-						window.draw(backgroundSprite);
 						break;
 					case WALL:
 						window.draw(wallSprite);
