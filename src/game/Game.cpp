@@ -1,11 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-
 #include "Game.h"
 #include "Direction.h"
 
 float TILE_SIZE = 20.0f;
+
+const std::string PATH_IMAGES = "Assets/images/";
+const std::string PATH_FONTS = "Assets/fonts/";
+const std::string PATH_MAPS = "Assets/maps/";
 
 Game::Game(const std::string& ip, int port, const sf::Color& localPlayerColor) :
 	ip(ip),
@@ -22,10 +25,10 @@ Game::~Game() {
 
 bool Game::LoadResources() {
 
-	if (!spriteSheet.loadFromFile("Assets/spritesheet.png") ||
-		!explosionTexture.loadFromFile("Assets/explosion.png") ||
-		!font.loadFromFile("Assets/Roboto/Roboto-Regular.ttf") ||
-		!titleTexture.loadFromFile("Assets/title.png"))
+	if (!spriteSheet.loadFromFile(PATH_IMAGES + "spritesheet.png") ||
+		!explosionTexture.loadFromFile(PATH_IMAGES + "explosion.png") ||
+		!font.loadFromFile(PATH_FONTS + "Roboto/Roboto-Regular.ttf") ||
+		!titleTexture.loadFromFile(PATH_IMAGES + "title.png"))
 	{
 		return false;
 	}

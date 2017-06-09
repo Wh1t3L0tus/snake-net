@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 
+const std::string PATH_MAPS = "Assets/maps/";
+
 const char SPAWNER_E = '>';
 const char SPAWNER_W = '<';
 const char SPAWNER_N = 'A';
@@ -12,7 +14,7 @@ const char VOID = ' ';
 
 bool MapLoader::LoadMap(const std::string& filename, Map& map) {
 
-	std::ifstream file("Assets/" + filename);
+	std::ifstream file(PATH_MAPS + filename);
 
 	if (!file.is_open()) {
 		return false;
