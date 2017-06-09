@@ -46,14 +46,14 @@ void GameState::Update(InputList inputsList)
 		snakes[s].SetDirection(inputsList.inputs[s]);
 
 		MakeSnakeMove(snakes[s], snakeLUT[s]);
-
-		if (isAppleEaten)
-		{
-			GenerateApple();
-		}
 	}
 
 	ResolveCollisions();
+
+	if (isAppleEaten)
+	{
+		GenerateApple();
+	}
 }
 
 void GameState::GenerateApple()
