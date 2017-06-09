@@ -15,7 +15,8 @@ bool Game::LoadResources() {
 	
 	if (!mapTexture.loadFromFile("Assets/map-default.png") ||
 		!snakeTexture.loadFromFile("Assets/snake-default.png") ||
-		!explosionTexture.loadFromFile("Assets/explosion.png")) {
+		!explosionTexture.loadFromFile("Assets/explosion.png") ||
+		!appleTexture.loadFromFile("Assets/apple.png")) {
 
 		return false;
 	}
@@ -99,7 +100,7 @@ void Game::MainLoop() {
 			// update game state
 			gameState.Update(fetchedInputs);
 
-			DisplayGameInConsole(gameState);
+			//DisplayGameInConsole(gameState);
 		}
 
 		// Draw window

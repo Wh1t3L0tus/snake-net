@@ -4,6 +4,8 @@
 
 void GameState::Initialize(GameSettings gameSettings)
 {
+	srand(gameSettings.seed);
+
 	// create map
 	width = 10;
 	height = 10;
@@ -31,6 +33,8 @@ void GameState::Initialize(GameSettings gameSettings)
 
 		AddBit(CellAt(snakes[s].bodyPositions.front()), GetHeadBit(snakeLUT[s]));
 	}
+
+	isAppleEaten = true;
 }
 
 void GameState::Update(InputList inputsList)
@@ -41,12 +45,30 @@ void GameState::Update(InputList inputsList)
 	{
 		snakes[s].SetDirection(inputsList.inputs[s]);
 
-		//std::cout << "Input = " << inputsList.inputs[s] << "; Snake new direction = " << snakes[s].GetDirection() << std::endl;
-
 		MakeSnakeMove(snakes[s], snakeLUT[s]);
+
+		if (isAppleEaten)
+		{
+			GenerateApple();
+		}
 	}
 
 	ResolveCollisions();
+}
+
+void GameState::GenerateApple()
+{
+	while (isAppleEaten)
+	{
+		int x = (int)(rand() / (float)RAND_MAX * width);
+		int y = (int)(rand() / (float)RAND_MAX * height);
+
+		if (CellAt(x, y) == EMPTY)
+		{
+			AddBit(CellAt(x, y), APPLE);
+			isAppleEaten = false;
+		}
+	}
 }
 
 void GameState::MakeSnakeMove(Snake& snake, CellState id)
@@ -104,15 +126,11 @@ void GameState::MakeSnakeMove(Snake& snake, CellState id)
 
 void GameState::ResolveCollisions()
 {
-	// TODO : APPLE MANAGEMENT
-
-	CellState curr; // current cell state 
-
 	for (size_t j = 0; j < height; j++)
 	{
 		for (size_t i = 0; i < width; i++)
 		{
-			curr = CellAt(i, j);
+			CellState& curr = CellAt(i, j);
 			
 			for (size_t s = 0; s < snakes.size(); s++)
 			{
@@ -120,8 +138,18 @@ void GameState::ResolveCollisions()
 
 				if (((curr & snakeHeadValue) == snakeHeadValue) && (curr != snakeHeadValue))
 				{
-					std::cout << "Snake " << s << " had been killed. (" << curr << ")" << std::endl;
-					snakes[s].isDead = true;
+					if (curr == (snakeHeadValue | APPLE))
+					{
+						std::cout << "Snake " << s << " have eaten apple :D" << std::endl;
+						snakes[s].growCounter += 1;
+						RemoveBit(curr, APPLE);
+						isAppleEaten = true;
+					}
+					else 
+					{
+						std::cout << "Snake " << s << " had been killed. (" << curr << ")" << std::endl;
+						snakes[s].isDead = true;
+					}
 				}
 			}
 		}

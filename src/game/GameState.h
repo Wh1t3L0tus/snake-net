@@ -42,6 +42,8 @@ public:
 
 private:
 
+	bool isAppleEaten;
+	void GenerateApple();
 
 	std::vector<CellState> map;
 	std::vector<Snake> snakes;
