@@ -5,7 +5,7 @@
 #include "Game.h"
 #include "Direction.h"
 
-int TILE_SIZE = 20;
+float TILE_SIZE = 20.0f;
 
 Game::Game() {
 
@@ -20,6 +20,8 @@ Game::Game() {
 
 	snakeHeadSprite.setTexture(snakeTexture);
 	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
+
+	snakeHeadSprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 }
 
 void Game::MainLoop() {
@@ -96,10 +98,11 @@ void Game::MainLoop() {
 
 				CellState cell = map[j * gameState.width + i];
 				sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
+				sf::Vector2f headPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 
 				wallSprite.setPosition(position);
 				snakeBodySprite.setPosition(position);
-				snakeHeadSprite.setPosition(position);
+				snakeHeadSprite.setPosition(headPosition);
 
 				switch (cell)
 				{
@@ -115,7 +118,7 @@ void Game::MainLoop() {
 						window.draw(snakeBodySprite);
 						break;
 					case SNAKE_0_H:
-						snakes[0].GetDirection();
+						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[0].GetDirection()));
 						snakeHeadSprite.setColor(settings.playerColors[0]);
 						window.draw(snakeHeadSprite);
 						break;
@@ -124,6 +127,7 @@ void Game::MainLoop() {
 						window.draw(snakeBodySprite);
 						break;
 					case SNAKE_1_H:
+						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[1].GetDirection()));
 						snakeHeadSprite.setColor(settings.playerColors[1]);
 						window.draw(snakeHeadSprite);
 						break;
@@ -132,6 +136,7 @@ void Game::MainLoop() {
 						window.draw(snakeBodySprite);
 						break;
 					case SNAKE_2_H:
+						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[2].GetDirection()));
 						snakeHeadSprite.setColor(settings.playerColors[2]);
 						window.draw(snakeHeadSprite);
 						break;
@@ -148,6 +153,7 @@ void Game::MainLoop() {
 						window.draw(snakeBodySprite);
 						break;
 					case SNAKE_4_H:
+						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[4].GetDirection()));
 						snakeHeadSprite.setColor(settings.playerColors[4]);
 						window.draw(snakeHeadSprite);
 						break;
@@ -209,5 +215,23 @@ sf::Color Game::getRandomColor() const
 		case 5: return sf::Color::Red;
 		case 6: return sf::Color::Yellow;
 		default: return sf::Color::White;
+	}
+}
+
+
+float Game::GetAngleFromDirection(Direction dir) const {
+
+	switch (dir)
+	{
+		case UP:
+			return 0.0f;
+		case DOWN:
+			return 180.0f;
+		case RIGHT:
+			return 90.0f;
+		case LEFT:
+			return 270.0f;
+		default:
+			return 0.0f;
 	}
 }

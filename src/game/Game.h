@@ -18,6 +18,8 @@ public:
 
 private:
 
+	float GetAngleFromDirection(Direction dir) const;
+
 	Client client;
 	Direction lastDir;
 
