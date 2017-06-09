@@ -35,6 +35,8 @@ void GameState::Initialize(GameSettings gameSettings)
 
 void GameState::Update(InputList inputsList)
 {
+	CleanMapFromDeadSnakes();
+
 	for (int s = 0; s < inputsList.nbInput; s++)
 	{
 		snakes[s].SetDirection(inputsList.inputs[s]);
@@ -45,8 +47,6 @@ void GameState::Update(InputList inputsList)
 	}
 
 	ResolveCollisions();
-
-	CleanMapFromDeadSnakes();
 }
 
 void GameState::MakeSnakeMove(Snake& snake, CellState id)
