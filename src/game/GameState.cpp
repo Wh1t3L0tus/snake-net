@@ -1,36 +1,38 @@
+#include "GameState.h"
+#include "MapLoader.h"
+
 #include <iostream>
 
-#include "GameState.h"
-
-void GameState::Initialize(GameSettings gameSettings)
+bool GameState::Initialize(GameSettings gameSettings)
 {
 	// create map
-	width = 10;
-	height = 10;
-	map = std::vector<CellState>(width * height, EMPTY);
+	Map loadedMap;
+	if (!MapLoader::LoadMap(gameSettings.mapName, loadedMap)) {
 
-	for (size_t j = 0; j < height; j++)
-	{
-		for (size_t i = 0; i < width; i++) 
-		{
-			if (i == 0 || i == width - 1 || j == 0 || j == height - 1)
-			{
-				map[j * width + i] = WALL;
-			}
-		}
+		std::cerr << "Cannot load map " << gameSettings.mapName << std::endl;
+		return false;
 	}
+
+	width = loadedMap.width;
+	height = loadedMap.height;
+	map = loadedMap.tiles;
 
 	std::cout << "[GameState] Player count : " << (int)gameSettings.playerCount << std::endl;
 
-	// créer les snakes et initialiser la LookUpTable
+	// create snakes and initialize look up table
+	auto spawnerIterator = loadedMap.spawners.begin();
 	for (size_t s = 0; s < gameSettings.playerCount; s++)
 	{
-		snakes.push_back(Snake(sf::Vector2i(2, 2 + s), RIGHT, 3));
+		snakes.push_back(Snake(sf::Vector2i(spawnerIterator->coords), spawnerIterator->direction, 3));
 
 		snakeLUT.emplace(s, static_cast<CellState>(SNAKE_0 << (2 * s)));
 
 		AddBit(CellAt(snakes[s].bodyPositions.front()), GetHeadBit(snakeLUT[s]));
+
+		++spawnerIterator;
 	}
+
+	return true;
 }
 
 void GameState::Update(InputList inputsList)
