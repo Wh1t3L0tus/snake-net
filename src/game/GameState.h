@@ -38,6 +38,8 @@ public:
 
 	std::vector<CellState> GetMap() const { return map; }
 
+	const std::vector<Snake>& GetSnakes() const { return snakes; }
+
 private:
 
 

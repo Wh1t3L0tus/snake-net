@@ -22,6 +22,13 @@ private:
 	Direction lastDir;
 
 	sf::Color getRandomColor() const;
+
+	sf::Sprite wallSprite;
+	sf::Sprite snakeHeadSprite;
+	sf::Sprite snakeBodySprite;
+	
+	sf::Texture wallTexture;
+	sf::Texture snakeTexture;
 };
 
 

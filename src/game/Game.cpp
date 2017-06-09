@@ -5,24 +5,39 @@
 #include "Game.h"
 #include "Direction.h"
 
+int TILE_SIZE = 20;
+
 Game::Game() {
 
+	// Load textures
+	wallTexture.loadFromFile("Assets/wall.png");
+	snakeTexture.loadFromFile("Assets/snake-default.png");
+
+	wallSprite.setTexture(wallTexture);
+	
+	snakeBodySprite.setTexture(snakeTexture);
+	snakeBodySprite.setTextureRect(sf::IntRect(TILE_SIZE - 1, 0, TILE_SIZE, TILE_SIZE));
+
+	snakeHeadSprite.setTexture(snakeTexture);
+	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
 }
 
 void Game::MainLoop() {
 
-	std::vector<sf::Color> playerColors;
-	playerColors.push_back(getRandomColor());
+	std::vector<sf::Color> localPlayersColors;
+	localPlayersColors.push_back(sf::Color(255, 0, 0));
 
-	if (!client.Start("127.0.0.1", 8888, playerColors)) {
+	if (!client.Start("127.0.0.1", 8888, localPlayersColors)) {
 		std::cerr << "Error while starting client" << std::endl;
 		return;
 	}
 
 	GameState gameState;
-	gameState.Initialize(client.GetGameSettings());
+	GameSettings settings = client.GetGameSettings();
+	gameState.Initialize(settings);
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Snake-net-client");
+	sf::Vector2f windowSize(800, 600);
+	sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Snake-net-client");
 
 	while (window.isOpen()) {
 
@@ -73,6 +88,74 @@ void Game::MainLoop() {
 		// Draw window
 		window.clear();
 
+		const std::vector<Snake>& snakes = gameState.GetSnakes();
+		std::vector<CellState> map = gameState.GetMap();
+		for (int j = 0; j < gameState.height; j++) {
+
+			for (int i = 0; i < gameState.width; i++) {
+
+				CellState cell = map[j * gameState.width + i];
+				sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
+
+				wallSprite.setPosition(position);
+				snakeBodySprite.setPosition(position);
+				snakeHeadSprite.setPosition(position);
+
+				switch (cell)
+				{
+					case EMPTY:
+						break;
+					case WALL:
+						window.draw(wallSprite);
+						break;
+					case APPLE:
+						break;
+					case SNAKE_0:
+						snakeBodySprite.setColor(settings.playerColors[0]);
+						window.draw(snakeBodySprite);
+						break;
+					case SNAKE_0_H:
+						snakes[0].GetDirection();
+						snakeHeadSprite.setColor(settings.playerColors[0]);
+						window.draw(snakeHeadSprite);
+						break;
+					case SNAKE_1:
+						snakeBodySprite.setColor(settings.playerColors[1]);
+						window.draw(snakeBodySprite);
+						break;
+					case SNAKE_1_H:
+						snakeHeadSprite.setColor(settings.playerColors[1]);
+						window.draw(snakeHeadSprite);
+						break;
+					case SNAKE_2:
+						snakeBodySprite.setColor(settings.playerColors[2]);
+						window.draw(snakeBodySprite);
+						break;
+					case SNAKE_2_H:
+						snakeHeadSprite.setColor(settings.playerColors[2]);
+						window.draw(snakeHeadSprite);
+						break;
+					case SNAKE_3:
+						snakeBodySprite.setColor(settings.playerColors[3]);
+						window.draw(snakeBodySprite);
+						break;
+					case SNAKE_3_H:
+						snakeHeadSprite.setColor(settings.playerColors[3]);
+						window.draw(snakeHeadSprite);
+						break;
+					case SNAKE_4:
+						snakeBodySprite.setColor(settings.playerColors[4]);
+						window.draw(snakeBodySprite);
+						break;
+					case SNAKE_4_H:
+						snakeHeadSprite.setColor(settings.playerColors[4]);
+						window.draw(snakeHeadSprite);
+						break;
+					default:
+						break;
+				}
+			}
+		}
 
 		window.display();
 	}
