@@ -44,7 +44,10 @@ void Game::MainLoop() {
 
 	GameState gameState;
 	GameSettings settings = client.GetGameSettings();
-	gameState.Initialize(settings);
+	
+	if (!gameState.Initialize(settings)) {
+		return;
+	}
 
 	sf::Vector2f windowSize(800, 600);
 	sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "Snake-net-client");

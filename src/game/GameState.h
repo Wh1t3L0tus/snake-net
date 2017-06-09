@@ -6,28 +6,14 @@
 
 #include "Snake.h"
 #include "..\network\Network.h"
+#include "CellState.h"
 
-enum CellState {
-	EMPTY = 0,
-	WALL = 1,
-	APPLE = 2,
-	SNAKE_0 = 4,
-	SNAKE_0_H = 8,
-	SNAKE_1 = 16,
-	SNAKE_1_H = 32,
-	SNAKE_2 = 64,
-	SNAKE_2_H = 128,
-	SNAKE_3 = 256,
-	SNAKE_3_H = 512,
-	SNAKE_4 = 1024,
-	SNAKE_4_H = 2048
-};
 
 class GameState {
 
 public:
 
-	void Initialize(GameSettings gameSettings);
+	bool Initialize(GameSettings gameSettings);
 	void Update(InputList inputsList);
 
 	bool IsGameOver() const;

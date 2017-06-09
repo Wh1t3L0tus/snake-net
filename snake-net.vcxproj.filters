@@ -33,6 +33,9 @@
     <ClCompile Include="src\game\GameState.cpp">
       <Filter>src\game</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\MapLoader.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\Snake.h">
@@ -54,6 +57,12 @@
       <Filter>src\game</Filter>
     </ClInclude>
     <ClInclude Include="src\game\GameState.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\MapLoader.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\CellState.h">
       <Filter>src\game</Filter>
     </ClInclude>
   </ItemGroup>
