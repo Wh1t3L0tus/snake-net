@@ -162,6 +162,7 @@ void Game::MainLoop() {
 						window.draw(snakeBodySprite);
 						break;
 					case SNAKE_3_H:
+						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[3].GetDirection()));
 						snakeHeadSprite.setColor(settings.playerColors[3]);
 						window.draw(snakeHeadSprite);
 						break;
