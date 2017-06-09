@@ -14,30 +14,20 @@ Game::Game(const std::string& ip, int port, const sf::Color& localPlayerColor) :
 
 bool Game::LoadResources() {
 
-	
-	if (!mapTexture.loadFromFile("Assets/map-default.png") ||
-		!snakeTexture.loadFromFile("Assets/snake-default.png") ||
-		!explosionTexture.loadFromFile("Assets/explosion.png") ||
-		!appleTexture.loadFromFile("Assets/apple.png")) {
-
+	if (!spriteSheet.loadFromFile("Assets/spritesheet.png") ||
+		!explosionTexture.loadFromFile("Assets/explosion.png"))
+	{
 		return false;
 	}
 
-	wallSprite.setTexture(mapTexture);
-	backgroundSprite.setTexture(mapTexture);
-	snakeBodySprite.setTexture(snakeTexture);
-	snakeHeadSprite.setTexture(snakeTexture);
-	appleSprite.setTexture(appleTexture);
+	LoadSpriteForSheet(wallSprite, 5, 0);
+	LoadSpriteForSheet(backgroundSprite, 5, 1);
+	LoadSpriteForSheet(snakeHeadSprite, 0, 2);
+	LoadSpriteForSheet(snakeBodySprite, 0, 3);
+	LoadSpriteForSheet(appleSprite, 0, 4);
+	
 	explosionSprite.setTexture(explosionTexture);
-
-	snakeBodySprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
-	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
-	snakeHeadSprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
-
 	explosionSprite.setOrigin(TILE_SIZE * 1.5f / 2.0f, TILE_SIZE * 1.5f / 2.0f);
-
-	backgroundSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
-	wallSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
 
 	return true;
 }
@@ -116,14 +106,14 @@ void Game::MainLoop() {
 
 				CellState cell = map[j * gameState.width + i];
 				sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
-				sf::Vector2f headPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
+				sf::Vector2f centeredPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 
-				backgroundSprite.setPosition(position);
-				wallSprite.setPosition(position);
-				snakeBodySprite.setPosition(position);
-				snakeHeadSprite.setPosition(headPosition);
-				appleSprite.setPosition(position);
-				explosionSprite.setPosition(headPosition);
+				backgroundSprite.setPosition(centeredPosition);
+				wallSprite.setPosition(centeredPosition);
+				snakeBodySprite.setPosition(centeredPosition);
+				snakeHeadSprite.setPosition(centeredPosition);
+				appleSprite.setPosition(centeredPosition);
+				explosionSprite.setPosition(centeredPosition);
 
 				window.draw(backgroundSprite);
 
@@ -245,6 +235,12 @@ sf::Color Game::getRandomColor() const
 	}
 }
 
+void Game::LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset)
+{
+	sprite.setTexture(spriteSheet);
+	sprite.setTextureRect(sf::IntRect(xOffset * TILE_SIZE, yOffset * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+	sprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
+}
 
 float Game::GetAngleFromDirection(Direction dir) const {
 

@@ -27,17 +27,17 @@ private:
 
 	sf::Color getRandomColor() const;
 
+	void LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset);
+
+	sf::Texture spriteSheet;
+	sf::Texture explosionTexture;
+
 	sf::Sprite appleSprite;
 	sf::Sprite explosionSprite;
 	sf::Sprite backgroundSprite;
 	sf::Sprite wallSprite;
 	sf::Sprite snakeHeadSprite;
 	sf::Sprite snakeBodySprite;
-	
-	sf::Texture appleTexture;
-	sf::Texture explosionTexture;
-	sf::Texture mapTexture;
-	sf::Texture snakeTexture;
 
 	std::string ip;
 	int port;
