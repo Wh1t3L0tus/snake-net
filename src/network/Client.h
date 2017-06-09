@@ -27,6 +27,8 @@ public:
 
 	GameSettings GetGameSettings() const;
 
+	ClientInfo GetClientInfos() const;
+
 	void Close();
 
 private:
@@ -53,6 +55,8 @@ private:
 	std::mutex receiverMutex;
 
 	bool quit;
+
+	ClientInfo clientInfos;
 };
 
 #endif

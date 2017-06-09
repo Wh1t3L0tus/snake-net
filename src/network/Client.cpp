@@ -54,6 +54,7 @@ bool Client::Configure(const std::string& ip, int port, const std::vector<sf::Co
 		return false;
 	}
 	packet >> infos;
+	clientInfos = infos;
 	std::cout << "Received client infos !" << std::endl;
 
 
@@ -96,6 +97,11 @@ bool Client::FetchInputsFromServer(InputList& inputs) {
 GameSettings Client::GetGameSettings() const
 {
 	return gameSettings;
+}
+
+ClientInfo Client::GetClientInfos() const {
+
+	return clientInfos;
 }
 
 void Client::ReceiveLoop() {

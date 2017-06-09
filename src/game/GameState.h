@@ -17,7 +17,6 @@ public:
 	void Update(InputList inputsList);
 
 	bool IsGameOver() const;
-	std::string GetGameOverMessage() const;
 
 	int width;
 	int height;

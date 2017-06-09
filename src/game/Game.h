@@ -20,6 +20,8 @@ public:
 
 	bool LoadResources();
 
+	bool WinCondition(const std::vector<Snake>& snakes) const;
+
 private:
 
 	sf::RenderWindow window;
@@ -43,10 +45,17 @@ private:
 	sf::Sprite snakeBodySprite;
 	sf::Sprite explosionSprite;
 
+	sf::Font font;
+
+	sf::Text loseText;
+	sf::Text winText;
+
 	std::string ip;
 	int port;
 
 	sf::Color localPlayerColor;
+	bool gameOver;
+	sf::Clock gameOverClock;
 };
 
 
