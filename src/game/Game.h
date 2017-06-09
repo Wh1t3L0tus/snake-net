@@ -10,6 +10,8 @@ public:
 
 	Game(const std::string& ip, int port, const sf::Color& localPlayerColor);
 
+	~Game();
+
 	void MainLoop();
 
 	void DisplayGameInConsole(GameState gameState) const;

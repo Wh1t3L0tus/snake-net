@@ -27,6 +27,8 @@ public:
 
 	GameSettings GetGameSettings() const;
 
+	void Close();
+
 private:
 
 	bool Configure(const std::string& ip, int port, const std::vector<sf::Color>& playersColor);
@@ -49,6 +51,8 @@ private:
 
 	std::mutex senderMutex;
 	std::mutex receiverMutex;
+
+	bool quit;
 };
 
 #endif

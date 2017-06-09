@@ -3,7 +3,7 @@
 #include "Network.h"
 #include "Client.h"
 
-Client::Client() {}
+Client::Client() : quit(false) {}
 
 bool Client::Start(const std::string& ip, int port, const std::vector<sf::Color>& playersColor) {
 	bool configureResult = Configure(ip, port, playersColor);
@@ -119,7 +119,7 @@ void Client::SendLoop() {
 	sf::Socket::Status status = sf::Socket::Done;
 	sf::Packet packet;
 
-	while (true) {
+	while (!quit) {
 
 		senderMutex.lock();
 		if (shouldSendInputs) {
@@ -142,4 +142,13 @@ void Client::SendLoop() {
 void Client::StartThreads() {
 	senderThread = std::thread(&Client::SendLoop, this);
 	receiverThread = std::thread(&Client::ReceiveLoop, this);
+}
+
+void Client::Close() {
+
+	quit = true;
+	socket.disconnect();
+
+	senderThread.join();
+	receiverThread.join();
 }

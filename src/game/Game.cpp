@@ -15,6 +15,10 @@ Game::Game(const std::string& ip, int port, const sf::Color& localPlayerColor) :
 	gamePhase = CREATE_WINDOW;
 }
 
+Game::~Game() {
+	client.Close();
+}
+
 bool Game::LoadResources() {
 
 	if (!spriteSheet.loadFromFile("Assets/spritesheet.png") ||
