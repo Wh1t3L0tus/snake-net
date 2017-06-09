@@ -25,7 +25,10 @@ int main(int argc, char** argv)
 	else if (CLIENT_MODE == argv[1]) {
 
 		Game game;
-		game.MainLoop();
+
+		if (game.LoadResources()) {
+			game.MainLoop();
+		}
 	}
 	
 

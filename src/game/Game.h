@@ -16,6 +16,8 @@ public:
 
 	char drawChar(CellState state) const;
 
+	bool LoadResources();
+
 private:
 
 	float GetAngleFromDirection(Direction dir) const;
@@ -25,11 +27,16 @@ private:
 
 	sf::Color getRandomColor() const;
 
+	sf::Sprite appleSprite;
+	sf::Sprite explosionSprite;
+	sf::Sprite backgroundSprite;
 	sf::Sprite wallSprite;
 	sf::Sprite snakeHeadSprite;
 	sf::Sprite snakeBodySprite;
 	
-	sf::Texture wallTexture;
+	sf::Texture appleTexture;
+	sf::Texture explosionTexture;
+	sf::Texture mapTexture;
 	sf::Texture snakeTexture;
 };
 

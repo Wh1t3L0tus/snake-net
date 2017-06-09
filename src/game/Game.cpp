@@ -8,20 +8,33 @@
 float TILE_SIZE = 20.0f;
 
 Game::Game() {
+}
 
-	// Load textures
-	wallTexture.loadFromFile("Assets/wall.png");
-	snakeTexture.loadFromFile("Assets/snake-default.png");
+bool Game::LoadResources() {
 
-	wallSprite.setTexture(wallTexture);
 	
+	if (!mapTexture.loadFromFile("Assets/map-default.png") ||
+		!snakeTexture.loadFromFile("Assets/snake-default.png") ||
+		!explosionTexture.loadFromFile("Assets/explosion.png")) {
+
+		return false;
+	}
+
+	wallSprite.setTexture(mapTexture);
+	backgroundSprite.setTexture(mapTexture);
 	snakeBodySprite.setTexture(snakeTexture);
-	snakeBodySprite.setTextureRect(sf::IntRect(TILE_SIZE - 1, 0, TILE_SIZE, TILE_SIZE));
-
 	snakeHeadSprite.setTexture(snakeTexture);
-	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
+	appleSprite.setTexture(appleTexture);
+	explosionSprite.setTexture(explosionTexture);
 
+	snakeBodySprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+	snakeHeadSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
 	snakeHeadSprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
+
+	backgroundSprite.setTextureRect(sf::IntRect(TILE_SIZE, 0, TILE_SIZE, TILE_SIZE));
+	wallSprite.setTextureRect(sf::IntRect(0, 0, TILE_SIZE, TILE_SIZE));
+
+	return true;
 }
 
 void Game::MainLoop() {
@@ -103,15 +116,19 @@ void Game::MainLoop() {
 				wallSprite.setPosition(position);
 				snakeBodySprite.setPosition(position);
 				snakeHeadSprite.setPosition(headPosition);
+				appleSprite.setPosition(position);
+				backgroundSprite.setPosition(position);
 
 				switch (cell)
 				{
 					case EMPTY:
+						window.draw(backgroundSprite);
 						break;
 					case WALL:
 						window.draw(wallSprite);
 						break;
 					case APPLE:
+						window.draw(appleSprite);
 						break;
 					case SNAKE_0:
 						snakeBodySprite.setColor(settings.playerColors[0]);
