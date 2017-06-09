@@ -4,16 +4,6 @@
 #include "../network/Client.h"
 #include "GameState.h"
 
-enum GamePhase 
-{
-	CREATE_WINDOW,
-	SENDING_CLIENT_INFO,
-	WAITING_FOR_GAME_SETTINGS,
-	IN_GAME,
-	GAME_OVER,
-	QUIT
-};
-
 class Game {
 
 public:
@@ -37,8 +27,6 @@ private:
 	Client client;
 	Direction lastDir;
 
-	sf::Color getRandomColor() const;
-
 	void LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset);
 	
 	sf::Texture titleTexture;
@@ -57,9 +45,6 @@ private:
 	int port;
 
 	sf::Color localPlayerColor;
-
-	GamePhase gamePhase;
-	bool isGameLaunched;
 };
 
 
