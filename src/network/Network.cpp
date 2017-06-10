@@ -14,7 +14,10 @@ sf::Packet& operator>>(sf::Packet& packet, sf::Color& c) {
 
 sf::Packet& operator<<(sf::Packet& packet, const GameSettings& s) {
 
-	packet << s.playerCount << s.seed << s.tickDuration << s.mapName;
+	packet << s.playerCount;
+	packet << s.seed;
+	packet << s.tickDuration;
+	packet << s.mapName;
 	
 	for (char i = 0; i < s.playerCount; i++) {
 
@@ -26,7 +29,10 @@ sf::Packet& operator<<(sf::Packet& packet, const GameSettings& s) {
 
 sf::Packet& operator>>(sf::Packet& packet, GameSettings& s) {
 	
-	packet >> s.playerCount >> s.seed >> s.tickDuration >> s.mapName;
+	packet >> s.playerCount;
+	packet >> s.seed;
+	packet >> s.tickDuration;
+	packet >> s.mapName;
 
 	for (char i = 0; i < s.playerCount; i++) {
 

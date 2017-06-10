@@ -1,11 +1,6 @@
 #include <iostream>
 #include "network/Server.h"
 
-#include "game\Game.h"
-
-
-#include <SFML/Network.hpp>
-
 
 int main(int argc, char** argv)
 {
@@ -52,41 +47,6 @@ int main(int argc, char** argv)
 		Server server(ip, port, nbPlayers, tickDuration, map);
 		
 		std::cout << std::boolalpha << server.start() << std::endl;
-	}
-	else if (CLIENT_MODE == argv[1]) {
-
-		std::string ip;
-		int port;
-		int red;
-		int green;
-		int blue;
-
-		if (simplifiedMode) {
-			std::cout << "Server IP : ";
-			std::cin >> ip;
-			std::cout << std::endl << "Server port : ";
-			std::cin >> port;
-			std::cout << std::endl << "Snake red component : ";
-			std::cin >> red;
-			std::cout << std::endl << "Snake green component : ";
-			std::cin >> green;
-			std::cout << std::endl << "Snake blue component : ";
-			std::cin >> blue;
-		}
-		else {
-			ip = argv[2];
-			port = std::stoi(argv[3]);
-			red = std::stoi(argv[4]);
-			green = std::stoi(argv[5]);
-			blue = std::stoi(argv[6]);
-		}
-
-
-		Game game(ip, port, sf::Color(red, green, blue));
-
-		if (game.LoadResources()) {
-			game.MainLoop();
-		}
 	}
 	
 

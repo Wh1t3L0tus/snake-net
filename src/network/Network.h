@@ -5,6 +5,7 @@
 #include <SFML/Network.hpp>
 #include <vector>
 #include <cstdint>
+#include <string>
 
 #include "../game/Direction.h"
 
