@@ -4,6 +4,14 @@
 #include "../network/Client.h"
 #include "GameState.h"
 
+enum PlayerStatus 
+{
+	GAME_ON,
+	LOSER,
+	WINNER,
+	GAME_OVER
+};
+
 class Game {
 
 public:
@@ -20,18 +28,30 @@ public:
 
 	bool LoadResources();
 
-	bool WinCondition(const std::vector<Snake>& snakes) const;
-
 private:
 
 	sf::RenderWindow window;
+	sf::Vector2f windowSize;
 
 	float GetAngleFromDirection(Direction dir) const;
 
 	Client client;
 	Direction lastDir;
+	GameState gameState;
+	GameSettings settings;
 
 	void LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset);
+
+	void GetAndSendPlayerInput();
+	void ReceiveInputsAndUpdateGameState();
+	void DrawGameState();
+	void DrawCell(const CellState& cell, const sf::Vector2f& pos);
+	void DrawSprite(sf::Sprite& sprite, const sf::Vector2f& position);
+	void DrawSprite(sf::Sprite& sprite, const sf::Vector2f& position, const sf::Color& color);
+	void DrawSprite(sf::Sprite& sprite, const sf::Vector2f& position, const sf::Color& color, const float& angle);
+
+	int GetAliveSnakesCount() const;
+	std::vector<sf::Vector2f> explosionsPositions;
 	
 	sf::Texture titleTexture;
 	sf::Texture spriteSheet;
@@ -53,6 +73,8 @@ private:
 
 	std::string ip;
 	int port;
+
+	PlayerStatus playerStatus;
 
 	sf::Color localPlayerColor;
 	bool gameOver;

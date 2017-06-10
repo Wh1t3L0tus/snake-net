@@ -6,6 +6,8 @@
 
 float TILE_SIZE = 20.0f;
 
+const bool USE_GAME_OVER_CLOCK = true;
+
 const std::string PATH_IMAGES = "Assets/images/";
 const std::string PATH_FONTS = "Assets/fonts/";
 const std::string PATH_MAPS = "Assets/maps/";
@@ -67,7 +69,7 @@ bool Game::LoadResources() {
 void Game::MainLoop() {
 
 	std::vector<sf::Color> localPlayersColors;
-	sf::Vector2f windowSize(800, 600);
+	windowSize = sf::Vector2f(800, 600);
 
 	sf::VideoMode VMode(windowSize.x, windowSize.y);
 	window.create(VMode, "Snake-net-client");
@@ -108,8 +110,7 @@ void Game::MainLoop() {
 		return;
 	}
 
-	GameState gameState;
-	GameSettings settings = client.GetGameSettings();
+	settings = client.GetGameSettings();
 	int localSnakeID = client.GetClientInfos().infos[0].first;
 
 	if (!gameState.Initialize(settings)) {
@@ -119,162 +120,108 @@ void Game::MainLoop() {
 	loseText.setPosition(windowSize / 2.0f - sf::Vector2f(loseText.getGlobalBounds().width / 2.0f, loseText.getGlobalBounds().height / 2.0f));
 	winText.setPosition(windowSize / 2.0f - sf::Vector2f(winText.getGlobalBounds().width / 2.0f, winText.getGlobalBounds().height / 2.0f));
 
-	while (window.isOpen()) {
+	playerStatus = GAME_ON;
 
-		while (window.isOpen())
+	while (window.isOpen())
+	{
+		sf::Event evnt;
+		while (window.pollEvent(evnt))
 		{
-			sf::Event evnt;
-			while (window.pollEvent(evnt))
+			if (evnt.type == sf::Event::Closed)
 			{
-				if (evnt.type == sf::Event::Closed)
-				{
-					window.close();
-					return;
-				}
-			}
-
-			Direction dir = Direction::NONE;
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-
-				dir = Direction::LEFT;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-
-				dir = Direction::RIGHT;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-
-				dir = Direction::UP;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-
-				dir = Direction::DOWN;
-			}
-
-			if (dir != Direction::NONE && dir != lastDir) {
-				InputList localInputs;
-				localInputs.nbInput = 1;
-				localInputs.inputs.push_back(dir);
-				client.SetLocalPlayersInputs(localInputs);
-			}
-
-			lastDir = dir;
-
-			InputList fetchedInputs;
-			if (client.FetchInputsFromServer(fetchedInputs)) {
-
-				// update game state
-				gameState.Update(fetchedInputs);
-
-				//DisplayGameInConsole(gameState);
-			}
-
-			const std::vector<Snake>& snakes = gameState.GetSnakes();
-			std::vector<CellState> map = gameState.GetMap();
-
-			// Win condition : all snakes except the local one are dead
-			if (gameOver && gameOverClock.getElapsedTime().asSeconds() > 5.0f) {
 				window.close();
+				return;
 			}
-			else if (WinCondition(snakes) && !gameOver) {
-				gameOver = true;
-				gameOverClock.restart();
-			}
+		}
 
-			// Draw window
-			window.clear();
+		const std::vector<Snake>& snakes = gameState.GetSnakes();
 
+		switch (playerStatus)
+		{
+			case GAME_ON:
+				GetAndSendPlayerInput();
+				ReceiveInputsAndUpdateGameState();
 
-			for (int j = 0; j < gameState.height; j++) {
+				window.clear();
+				DrawGameState();
 
-				for (int i = 0; i < gameState.width; i++) {
-
-					CellState cell = map[j * gameState.width + i];
-					sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
-					sf::Vector2f centeredPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
-
-					backgroundSprite.setPosition(centeredPosition);
-					wallSprite.setPosition(centeredPosition);
-					snakeBodySprite.setPosition(centeredPosition);
-					snakeHeadSprite.setPosition(centeredPosition);
-					appleSprite.setPosition(centeredPosition);
-					explosionSprite.setPosition(centeredPosition);
-
-					window.draw(backgroundSprite);
-
-					switch (cell)
+				{
+					int snakeCount = GetAliveSnakesCount();
+					if (snakeCount == 0)
 					{
-					case EMPTY:
-						break;
-					case WALL:
-						window.draw(wallSprite);
-						break;
-					case APPLE:
-						window.draw(appleSprite);
-						break;
-					case SNAKE_0:
-						snakeBodySprite.setColor(settings.playerColors[0]);
-						window.draw(snakeBodySprite);
-						break;
-					case SNAKE_0_H:
-						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[0].GetDirection()));
-						snakeHeadSprite.setColor(settings.playerColors[0]);
-						window.draw(snakeHeadSprite);
-						break;
-					case SNAKE_1:
-						snakeBodySprite.setColor(settings.playerColors[1]);
-						window.draw(snakeBodySprite);
-						break;
-					case SNAKE_1_H:
-						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[1].GetDirection()));
-						snakeHeadSprite.setColor(settings.playerColors[1]);
-						window.draw(snakeHeadSprite);
-						break;
-					case SNAKE_2:
-						snakeBodySprite.setColor(settings.playerColors[2]);
-						window.draw(snakeBodySprite);
-						break;
-					case SNAKE_2_H:
-						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[2].GetDirection()));
-						snakeHeadSprite.setColor(settings.playerColors[2]);
-						window.draw(snakeHeadSprite);
-						break;
-					case SNAKE_3:
-						snakeBodySprite.setColor(settings.playerColors[3]);
-						window.draw(snakeBodySprite);
-						break;
-					case SNAKE_3_H:
-						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[3].GetDirection()));
-						snakeHeadSprite.setColor(settings.playerColors[3]);
-						window.draw(snakeHeadSprite);
-						break;
-					case SNAKE_4:
-						snakeBodySprite.setColor(settings.playerColors[4]);
-						window.draw(snakeBodySprite);
-						break;
-					case SNAKE_4_H:
-						snakeHeadSprite.setRotation(GetAngleFromDirection(snakes[4].GetDirection()));
-						snakeHeadSprite.setColor(settings.playerColors[4]);
-						window.draw(snakeHeadSprite);
-						break;
-					default:
-						window.draw(explosionSprite);
-						break;
+						bool amILongest = true;
+						for (int i = 0; i < snakes.size(); i++)
+						{
+							if (snakes[i].bodyPositions.size() > snakes[localSnakeID].bodyPositions.size()) {
+								amILongest = false;
+								break;
+							}
+						}
+						window.draw(amILongest ? winText : loseText);
+						playerStatus = GAME_OVER;
+						std::cout << "GAME_OVER" << std::endl;
+
+					}
+					else if (snakes[localSnakeID].isDead)
+					{
+						playerStatus = LOSER;
+						std::cout << "LOSER" << std::endl;
+					}
+					else if (snakeCount == 1)
+					{
+						playerStatus = WINNER;
+						std::cout << "WINNER" << std::endl;
 					}
 				}
-			}
 
-			if (gameOver && !snakes[localSnakeID].isDead) {
-				window.draw(winText);
-			}
-			// if the local snake is dead it means that this player lost the game
-			else if (snakes[localSnakeID].isDead) {
+				window.display();
+
+				break;
+
+			case LOSER:
+				ReceiveInputsAndUpdateGameState();
+
+				window.clear();
+				DrawGameState();
 				window.draw(loseText);
-			}
+				window.display();
 
+				if (GetAliveSnakesCount() == 0)
+				{
+					playerStatus = GAME_OVER;
+					std::cout << "GAME_OVER" << std::endl;
+				}
 
+				break;
 
-			window.display();
+			case WINNER:
+				GetAndSendPlayerInput();
+				ReceiveInputsAndUpdateGameState();
+
+				window.clear();
+				DrawGameState();
+				window.draw(winText);
+				window.display();
+
+				if (GetAliveSnakesCount() == 0)
+				{
+					playerStatus = GAME_OVER;
+					std::cout << "GAME_OVER" << std::endl;
+				}
+
+				break;
+
+			case GAME_OVER:
+				if (USE_GAME_OVER_CLOCK && !gameOver)
+				{
+					gameOverClock.restart();
+					gameOver = true;
+				}
+				else if (gameOverClock.getElapsedTime().asSeconds() > 5.0f)
+				{
+					window.close();
+				}
+				break;
 		}
 	}
 }
@@ -321,6 +268,169 @@ void Game::LoadSpriteForSheet(sf::Sprite& sprite, int xOffset, int yOffset)
 	sprite.setOrigin(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
 }
 
+void Game::GetAndSendPlayerInput()
+{
+	Direction dir = Direction::NONE;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+
+		dir = Direction::LEFT;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+
+		dir = Direction::RIGHT;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+
+		dir = Direction::UP;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+
+		dir = Direction::DOWN;
+	}
+
+	if (dir != Direction::NONE && dir != lastDir) {
+		InputList localInputs;
+		localInputs.nbInput = 1;
+		localInputs.inputs.push_back(dir);
+		client.SetLocalPlayersInputs(localInputs);
+	}
+
+	lastDir = dir;
+}
+
+void Game::ReceiveInputsAndUpdateGameState()
+{
+	InputList fetchedInputs;
+	if (client.FetchInputsFromServer(fetchedInputs)) 
+	{
+		gameState.Update(fetchedInputs);
+	}
+}
+
+void Game::DrawGameState()
+{
+	std::vector<CellState> map = gameState.GetMap();
+
+	explosionsPositions.clear();
+
+	for (int j = 0; j < gameState.height; j++) {
+
+		for (int i = 0; i < gameState.width; i++) {
+
+			CellState cell = map[j * gameState.width + i];
+			sf::Vector2f position = sf::Vector2f(TILE_SIZE * i, TILE_SIZE * j) + windowSize / 2.0f - sf::Vector2f(gameState.width * TILE_SIZE / 2.0f, gameState.height * TILE_SIZE / 2.0f);
+			sf::Vector2f centeredPosition = position + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f);
+
+			DrawSprite(backgroundSprite, centeredPosition);
+
+			DrawCell(cell, centeredPosition);
+		}
+	}
+
+	for (int i = 0; i < explosionsPositions.size(); i++)
+	{
+		explosionSprite.setPosition(explosionsPositions[i]);
+		window.draw(explosionSprite);
+	}
+}
+
+void Game::DrawCell(const CellState& cell, const sf::Vector2f& pos)
+{
+	const std::vector<Snake>& snakes = gameState.GetSnakes();
+
+	int count = 0;
+
+	if (cell == EMPTY)
+	{
+		return;
+	}
+	else if (cell == APPLE)
+	{
+		DrawSprite(appleSprite, pos);
+		return;
+	}
+	else if (cell == (CellState)(cell | WALL))
+	{
+		DrawSprite(wallSprite, pos);
+		count++;
+	}
+	else if (cell == (CellState)(cell | SNAKE_0))
+	{
+		DrawSprite(snakeBodySprite, pos, settings.playerColors[0]);
+		count++;
+	}
+	else if (cell == (CellState)(cell | SNAKE_1))
+	{
+		DrawSprite(snakeBodySprite, pos, settings.playerColors[1]);
+		count++;
+	}
+	else if (cell == (CellState)(cell | SNAKE_2))
+	{
+		DrawSprite(snakeBodySprite, pos, settings.playerColors[2]);
+		count++;
+	}
+	else if (cell == (CellState)(cell | SNAKE_3))
+	{
+		DrawSprite(snakeBodySprite, pos, settings.playerColors[3]);
+		count++;
+	}
+	else if (cell == (CellState)(cell | SNAKE_4))
+	{
+		DrawSprite(snakeBodySprite, pos, settings.playerColors[4]);
+		count++;
+	}
+
+	if (cell == (CellState)(cell | SNAKE_0_H))
+	{
+		DrawSprite(snakeHeadSprite, pos, settings.playerColors[0], GetAngleFromDirection(snakes[0].GetDirection()));
+		count++;
+	}
+	if (cell == (CellState)(cell | SNAKE_1_H))
+	{
+		DrawSprite(snakeHeadSprite, pos, settings.playerColors[1], GetAngleFromDirection(snakes[1].GetDirection()));
+		count++;
+	}
+	if (cell == (CellState)(cell | SNAKE_2_H))
+	{
+		DrawSprite(snakeHeadSprite, pos, settings.playerColors[2], GetAngleFromDirection(snakes[2].GetDirection()));
+		count++;
+	}
+	if (cell == (CellState)(cell | SNAKE_3_H))
+	{
+		DrawSprite(snakeHeadSprite, pos, settings.playerColors[3], GetAngleFromDirection(snakes[3].GetDirection()));
+		count++;
+	}
+	if (cell == (CellState)(cell | SNAKE_4_H))
+	{
+		DrawSprite(snakeHeadSprite, pos, settings.playerColors[4], GetAngleFromDirection(snakes[4].GetDirection()));
+		count++;
+	}
+
+	if (count > 1)
+	{
+		explosionsPositions.push_back(pos);
+	}
+}
+
+void Game::DrawSprite(sf::Sprite& sprite, const sf::Vector2f& position)
+{
+	sprite.setPosition(position);
+	window.draw(sprite);
+}
+
+void Game::DrawSprite(sf::Sprite & sprite, const sf::Vector2f & position, const sf::Color & color)
+{
+	sprite.setColor(color);
+	DrawSprite(sprite, position);
+}
+
+void Game::DrawSprite(sf::Sprite & sprite, const sf::Vector2f & position, const sf::Color & color, const float & angle)
+{
+	sprite.setRotation(angle);
+	DrawSprite(sprite, position, color);
+}
+
 float Game::GetAngleFromDirection(Direction dir) const {
 
 	switch (dir)
@@ -338,9 +448,12 @@ float Game::GetAngleFromDirection(Direction dir) const {
 	}
 }
 
-bool Game::WinCondition(const std::vector<Snake>& snakes) const {
+int Game::GetAliveSnakesCount() const
+{
+	const std::vector<Snake>& snakes = gameState.GetSnakes();
 
 	int aliveSnakes = 0;
+
 	for (int i = 0; i < snakes.size(); i++) {
 
 		if (!snakes[i].isDead) {
@@ -348,5 +461,5 @@ bool Game::WinCondition(const std::vector<Snake>& snakes) const {
 		}
 	}
 
-	return aliveSnakes == 1;
+	return aliveSnakes;
 }

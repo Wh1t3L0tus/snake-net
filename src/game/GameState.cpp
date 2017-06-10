@@ -91,19 +91,19 @@ void GameState::MakeSnakeMove(Snake& snake, CellState id)
 	{
 		case UP:
 			newHeadPos.y -= 1;
-			newHeadPos.y %= height;
+			if (newHeadPos.y < 0) newHeadPos.y += height;
 			break;
 		case DOWN:
 			newHeadPos.y += 1;
-			newHeadPos.y %= height;
+			if (newHeadPos.y >= height) newHeadPos.y -= height;
 			break;
 		case RIGHT:
 			newHeadPos.x += 1;
-			newHeadPos.x %= width;
+			if (newHeadPos.x >= width) newHeadPos.x -= width;
 			break;
 		case LEFT:
 			newHeadPos.x -= 1;
-			newHeadPos.x %= width;
+			if (newHeadPos.x < 0) newHeadPos.x += width;
 			break;
 		default:
 			std::cerr << "A snake shouldn't have NONE direction." << std::endl;
