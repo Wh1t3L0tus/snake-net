@@ -14,7 +14,15 @@ enum CellState {
 	SNAKE_3 = 256,
 	SNAKE_3_H = 512,
 	SNAKE_4 = 1024,
-	SNAKE_4_H = 2048
+    SNAKE_4_H = 2048,
+    SNAKE_5 = 4096,
+    SNAKE_5_H = 8192,
+    SNAKE_6 = 16384,
+    SNAKE_6_H = 32768,
+    SNAKE_7 = 65536,
+    SNAKE_7_H = 131072,
+    SNAKE_8 = 262144,
+    SNAKE_8_H = 524288
 };
 
 #endif

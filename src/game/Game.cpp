@@ -257,6 +257,14 @@ char Game::drawChar(CellState state) const
 		case SNAKE_3_H: return 'D';
 		case SNAKE_4: return 'e'; 
 		case SNAKE_4_H: return 'E';
+        case SNAKE_5: return 'f';
+        case SNAKE_5_H: return 'F';
+        case SNAKE_6: return 'g';
+        case SNAKE_6_H: return 'G';
+        case SNAKE_7: return 'h';
+        case SNAKE_7_H: return 'H';
+        case SNAKE_8: return 'i';
+        case SNAKE_8_H: return 'I';
 		default: return 'X';
 	}
 }
@@ -272,19 +280,19 @@ void Game::GetAndSendPlayerInput()
 {
 	Direction dir = Direction::NONE;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
 		dir = Direction::LEFT;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 
 		dir = Direction::RIGHT;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
 		dir = Direction::UP;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 
 		dir = Direction::DOWN;
 	}
@@ -375,11 +383,31 @@ void Game::DrawCell(const CellState& cell, const sf::Vector2f& pos)
 		DrawSprite(snakeBodySprite, pos, settings.playerColors[3]);
 		count++;
 	}
-	else if (cell == (CellState)(cell | SNAKE_4))
-	{
-		DrawSprite(snakeBodySprite, pos, settings.playerColors[4]);
-		count++;
-	}
+    else if (cell == (CellState)(cell | SNAKE_4))
+    {
+        DrawSprite(snakeBodySprite, pos, settings.playerColors[4]);
+        count++;
+    }
+    else if (cell == (CellState)(cell | SNAKE_5))
+    {
+        DrawSprite(snakeBodySprite, pos, settings.playerColors[5]);
+        count++;
+    }
+    else if (cell == (CellState)(cell | SNAKE_6))
+    {
+        DrawSprite(snakeBodySprite, pos, settings.playerColors[6]);
+        count++;
+    }
+    else if (cell == (CellState)(cell | SNAKE_7))
+    {
+        DrawSprite(snakeBodySprite, pos, settings.playerColors[7]);
+        count++;
+    }
+    else if (cell == (CellState)(cell | SNAKE_8))
+    {
+        DrawSprite(snakeBodySprite, pos, settings.playerColors[8]);
+        count++;
+    }
 
 	if (cell == (CellState)(cell | SNAKE_0_H))
 	{
@@ -401,11 +429,31 @@ void Game::DrawCell(const CellState& cell, const sf::Vector2f& pos)
 		DrawSprite(snakeHeadSprite, pos, settings.playerColors[3], GetAngleFromDirection(snakes[3].GetDirection()));
 		count++;
 	}
-	if (cell == (CellState)(cell | SNAKE_4_H))
-	{
-		DrawSprite(snakeHeadSprite, pos, settings.playerColors[4], GetAngleFromDirection(snakes[4].GetDirection()));
-		count++;
-	}
+    if (cell == (CellState)(cell | SNAKE_4_H))
+    {
+        DrawSprite(snakeHeadSprite, pos, settings.playerColors[4], GetAngleFromDirection(snakes[4].GetDirection()));
+        count++;
+    }
+    if (cell == (CellState)(cell | SNAKE_5_H))
+    {
+        DrawSprite(snakeHeadSprite, pos, settings.playerColors[5], GetAngleFromDirection(snakes[5].GetDirection()));
+        count++;
+    }
+    if (cell == (CellState)(cell | SNAKE_6_H))
+    {
+        DrawSprite(snakeHeadSprite, pos, settings.playerColors[6], GetAngleFromDirection(snakes[6].GetDirection()));
+        count++;
+    }
+    if (cell == (CellState)(cell | SNAKE_7_H))
+    {
+        DrawSprite(snakeHeadSprite, pos, settings.playerColors[7], GetAngleFromDirection(snakes[7].GetDirection()));
+        count++;
+    }
+    if (cell == (CellState)(cell | SNAKE_8_H))
+    {
+        DrawSprite(snakeHeadSprite, pos, settings.playerColors[8], GetAngleFromDirection(snakes[8].GetDirection()));
+        count++;
+    }
 
 	if (count > 1)
 	{
