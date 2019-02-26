@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 const std::string PATH_MAPS = "Assets/maps/";
 
@@ -71,6 +72,8 @@ bool MapLoader::LoadMap(const std::string& filename, Map& map) {
 	map.height = height;
 
 	file.close();
+
+    std::random_shuffle(map.spawners.begin(), map.spawners.end());
 
 	return true;
 }
